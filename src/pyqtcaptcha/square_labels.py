@@ -42,12 +42,12 @@ square_labels = {
     '40': [[False, False, False, False], [False, True, True, False], [False, True, True, False], [False, True, True, False]],
     '41': [[True, False, False, False], [True, False, False, True], [False, False, False, True], [False, False, False, False]],
     '42': [[False, False, False, False], [False, True, True, False], [False, True, True, False], [False, True, True, False]],
-    '43': [[], [], [], []],
-    '44': [[], [], [], []],
-    '45': [[], [], [], []],
-    '46': [[], [], [], []],
-    '47': [[], [], [], []],
-    '48': [[], [], [], []],
-    '49': [[], [], [], []],
-    '50': [[], [], [], []]
+    '43': [[False, False, False, False], [True, False, False, True], [True, False, False, True], [False, False, False, False]],
+    '44': [[False, False, False, False], [False, False, False, False], [False, True, True, False], [False, True, True, False]],
+    '45': [[True, False, False, True], [True, False, False, True], [False, False, False, False], [False, False, False, False]],
+    '46': [[False, False, False, True], [False, False, False, True], [True, True, False, False], [False, False, False, True]],
+    '47': [[False, False, False, False], [False, True, True, False], [False, True, True, False], [False, True, False, False]],
+    '48': [[False, True, True, False], [False, True, True, False], [False, False, False, False], [False, False, False, False]],
+    '49': [[True, False, False, False], [True, False, False, True], [False, False, False, True], [False, False, False, False]],
+    '50': [[True, True, False, False], [True, True, False, False], [False, False, False, True], [False, False, False, True]]
 }
