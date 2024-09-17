@@ -1,6 +1,7 @@
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QPainter, QColor, QPixmap
 from qtpy.QtWidgets import QWidget, QLabel, QPushButton
+from .constants import *
 
 
 class CaptchaPopupContent(QLabel):
@@ -9,14 +10,15 @@ class CaptchaPopupContent(QLabel):
         super(CaptchaPopupContent, self).__init__(parent)
 
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        self.setFixedSize(330, 476)
+        self.setFixedSize(CAPTCHA_POPUP_SIZE)
         self.setStyleSheet('background: #FFF; border: 1px solid gray; border-radius: 10px;')
 
         self.submit = QPushButton(self)
         self.submit.setText('SUBMIT')
-        self.submit.setStyleSheet('color: #FFF; background: #1A73E8; border: none; border-radius: 5px')
-        self.submit.setFixedSize(90, 36)
-        self.submit.move(self.width() - self.submit.width() - 8, 432)
+        self.submit.setStyleSheet('color: #FFF; background: {}; border: none; border-radius: 5px'.format(CAPTCHA_POPUP_ACCENT_COLOR.name()))
+        self.submit.setFixedSize(SUBMIT_BUTTON_SIZE)
+        self.submit.move(SUBMIT_BUTTON_POSITION)
+
         font = self.submit.font()
         font.setBold(True)
         self.submit.setFont(font)
@@ -28,29 +30,24 @@ class CaptchaPopupContent(QLabel):
         painter.setPen(Qt.PenStyle.NoPen)
 
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        painter.setBrush(QColor(26, 115, 232))
+        painter.setBrush(CAPTCHA_POPUP_ACCENT_COLOR)
         painter.drawRoundedRect(8, 8, 314, 95, 5, 5)
         painter.drawRect(8, 38, 314, 65)
 
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
 
         painter.setBrush(QColor(150, 150, 150))
+
         width = 102
-        row_1 = 95 + 14 + 1
-        row_2 = row_1 + width + 4
-        row_3 = row_2 + width + 4
-        col_1 = 8
-        col_2 = col_1 + width + 4
-        col_3 = col_2 + width + 4
 
-        painter.drawRect(col_1, row_1, width, width)
-        painter.drawRect(col_1, row_2, width, width)
-        painter.drawRect(col_1, row_3, width, width)
+        painter.drawRect(IMAGE_COLUMN_1, IMAGE_ROW_1, width, width)
+        painter.drawRect(IMAGE_COLUMN_1, IMAGE_ROW_2, width, width)
+        painter.drawRect(IMAGE_COLUMN_1, IMAGE_ROW_3, width, width)
 
-        painter.drawRect(col_2, row_1, width, width)
-        painter.drawRect(col_2, row_2, width, width)
-        painter.drawRect(col_2, row_3, width, width)
+        painter.drawRect(IMAGE_COLUMN_2, IMAGE_ROW_1, width, width)
+        painter.drawRect(IMAGE_COLUMN_2, IMAGE_ROW_2, width, width)
+        painter.drawRect(IMAGE_COLUMN_2, IMAGE_ROW_3, width, width)
 
-        painter.drawRect(col_3, row_1, width, width)
-        painter.drawRect(col_3, row_2, width, width)
-        painter.drawRect(col_3, row_3, width, width)
+        painter.drawRect(IMAGE_COLUMN_3, IMAGE_ROW_1, width, width)
+        painter.drawRect(IMAGE_COLUMN_3, IMAGE_ROW_2, width, width)
+        painter.drawRect(IMAGE_COLUMN_3, IMAGE_ROW_3, width, width)

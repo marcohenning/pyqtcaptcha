@@ -1,6 +1,7 @@
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QWidget
 from .captcha_popup_content import CaptchaPopupContent
+from .constants import *
 
 
 class CaptchaPopup(QWidget):
@@ -10,6 +11,6 @@ class CaptchaPopup(QWidget):
 
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.setFixedSize(330, 476)
+        self.setFixedSize(CAPTCHA_POPUP_SIZE)
 
         self.widget = CaptchaPopupContent(self)
