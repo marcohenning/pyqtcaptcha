@@ -1,8 +1,11 @@
+from qtpy.QtCore import Signal
 from qtpy.QtWidgets import QWidget, QPushButton
 from .captcha_popup import CaptchaPopup
 
 
 class Captcha(QPushButton):
+
+    started = Signal()
 
     def __init__(self, parent: QWidget = None):
         super(Captcha, self).__init__(parent)
@@ -10,12 +13,13 @@ class Captcha(QPushButton):
         self.__text = ''
         super().setText('')
 
-        self.clicked.connect(self.__show_captcha)
+        self.clicked.connect(self.__show_captcha_popup)
 
-    def __show_captcha(self):
-        self.captcha = CaptchaPopup()
-        self.captcha.move(750, 300)
-        self.captcha.show()
+    def __show_captcha_popup(self):
+        self.__captcha_popup = CaptchaPopup()
+        self.__captcha_popup.move(750, 300)
+        self.__captcha_popup.show()
+        self.started.emit()
 
     def text(self) -> str:
         return self.__text

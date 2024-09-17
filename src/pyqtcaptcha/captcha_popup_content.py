@@ -1,5 +1,5 @@
 from qtpy.QtCore import Qt
-from qtpy.QtGui import QPainter, QColor, QPixmap
+from qtpy.QtGui import QPainter, QPixmap
 from qtpy.QtWidgets import QWidget, QLabel, QPushButton
 from .constants import *
 
@@ -15,9 +15,12 @@ class CaptchaPopupContent(QLabel):
 
         self.submit = QPushButton(self)
         self.submit.setText('SUBMIT')
-        self.submit.setStyleSheet('color: #FFF; background: {}; border: none; border-radius: 5px'.format(CAPTCHA_POPUP_ACCENT_COLOR.name()))
+        self.submit.setStyleSheet('QPushButton {color: #FFF; background: %s; border: none; border-radius: 5px;}'
+                                  'QPushButton::pressed {color: #FFF; background: %s; border: none; border-radius: 5px;}'
+                                  % (CAPTCHA_POPUP_ACCENT_COLOR.name(), CAPTCHA_POPUP_ACCENT_COLOR_PRESSED.name()))
         self.submit.setFixedSize(SUBMIT_BUTTON_SIZE)
         self.submit.move(SUBMIT_BUTTON_POSITION)
+        self.submit.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
         font = self.submit.font()
         font.setBold(True)
@@ -51,3 +54,7 @@ class CaptchaPopupContent(QLabel):
         painter.drawRect(IMAGE_COLUMN_3, IMAGE_ROW_1, width, width)
         painter.drawRect(IMAGE_COLUMN_3, IMAGE_ROW_2, width, width)
         painter.drawRect(IMAGE_COLUMN_3, IMAGE_ROW_3, width, width)
+
+    def focusOutEvent(self, event):
+        super().focusOutEvent(event)
+        self.parent().close()
