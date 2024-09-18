@@ -1,5 +1,5 @@
 from qtpy.QtCore import Qt
-from qtpy.QtGui import QPainter, QPixmap
+from qtpy.QtGui import QPainter, QPixmap, QPen, QFont, QFontMetrics
 from qtpy.QtWidgets import QWidget, QLabel, QPushButton
 from .captcha_image_button import CaptchaImageButton
 from .constants import *
@@ -148,6 +148,18 @@ class CaptchaPopupContent(QLabel):
         painter.setBrush(CAPTCHA_POPUP_ACCENT_COLOR)
         painter.drawRoundedRect(8, 8, 314, 95, 5, 5)
         painter.drawRect(8, 38, 314, 65)
+
+        painter.setPen(QPen(QColor('#FFF'), 3, Qt.PenStyle.SolidLine, Qt.PenCapStyle.SquareCap))
+        painter.setFont(QFont('Arial', 12))
+        font_metrics = QFontMetrics(painter.font())
+        height = font_metrics.tightBoundingRect('Select all squares with').height()
+        painter.drawText(16, 40, 'Select all squares with')
+
+        font_large = painter.font()
+        font_large.setPointSize(15)
+        font_large.setBold(True)
+        painter.setFont(font_large)
+        painter.drawText(16, 40 + height + int(height * 0.5), 'traffic lights')
 
         self.image = QPixmap(DIRECTORY + '/files/square/6.png')
         dimension = 77
