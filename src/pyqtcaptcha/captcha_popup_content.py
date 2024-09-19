@@ -18,7 +18,7 @@ class CaptchaPopupContent(QLabel):
         self.submit = QPushButton(self)
         self.submit.setText('SUBMIT')
         self.submit.setStyleSheet('QPushButton {color: #FFF; background: %s; border: none; border-radius: 5px;}'
-                                  'QPushButton::pressed {color: #FFF; background: %s; border: none; border-radius: 5px;}'
+                                  'QPushButton::hover {color: #FFF; background: %s; border: none; border-radius: 5px;}'
                                   % (CAPTCHA_POPUP_ACCENT_COLOR.name(), CAPTCHA_POPUP_ACCENT_COLOR_PRESSED.name()))
         self.submit.setFixedSize(SUBMIT_BUTTON_SIZE)
         self.submit.move(SUBMIT_BUTTON_POSITION)
@@ -201,4 +201,5 @@ class CaptchaPopupContent(QLabel):
 
     def focusOutEvent(self, event):
         super().focusOutEvent(event)
+        self.parent().aborted.emit()
         self.parent().close()
