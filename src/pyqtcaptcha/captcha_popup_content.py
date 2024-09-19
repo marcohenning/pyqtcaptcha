@@ -1,7 +1,8 @@
 from qtpy.QtCore import Qt
-from qtpy.QtGui import QPainter, QPixmap, QPen, QFont, QFontMetrics
+from qtpy.QtGui import QPainter, QPixmap, QPen, QFont, QFontMetrics, QImage
 from qtpy.QtWidgets import QWidget, QLabel, QPushButton
 from .captcha_image_button import CaptchaImageButton
+from .captcha_icon_button import CaptchaIconButton
 from .constants import *
 
 
@@ -26,6 +27,19 @@ class CaptchaPopupContent(QLabel):
         font = self.submit.font()
         font.setBold(True)
         self.submit.setFont(font)
+
+        self.__button_refresh = CaptchaIconButton(self)
+        self.__button_refresh.move(8, SUBMIT_BUTTON_POSITION.y())
+        self.__button_refresh.setIcon(QImage(DIRECTORY + '/files/icons/refresh.png'))
+
+        self.__button_visual = CaptchaIconButton(self)
+        self.__button_visual.move(44, SUBMIT_BUTTON_POSITION.y())
+        self.__button_visual.setIcon(QImage(DIRECTORY + '/files/icons/eye.png'))
+        self.__button_visual.setVisible(False)
+
+        self.__button_audio = CaptchaIconButton(self)
+        self.__button_audio.move(44, SUBMIT_BUTTON_POSITION.y())
+        self.__button_audio.setIcon(QImage(DIRECTORY + '/files/icons/headphones.png'))
 
         self.__buttons_image = []
         self.__buttons_square = []
@@ -131,11 +145,9 @@ class CaptchaPopupContent(QLabel):
         self.__buttons_square.append(self.__button_square_16)
 
         for button in self.__buttons_image:
-            button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
             button.setVisible(False)
 
         for button in self.__buttons_square:
-            button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
             button.setVisible(False)
 
     def paintEvent(self, event):

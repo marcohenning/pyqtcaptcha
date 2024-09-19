@@ -9,6 +9,7 @@ class CaptchaImageButton(QPushButton):
     def __init__(self, parent: QWidget = None):
         super(CaptchaImageButton, self).__init__(parent)
 
+        self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.setStyleSheet('border: none; border-radius: 0px;')
 
         self.__image = None
@@ -59,6 +60,10 @@ class CaptchaImageButton(QPushButton):
 
     def mousePressEvent(self, event) -> None:
         super().mousePressEvent(event)
+
+        if event.button() != Qt.MouseButton.LeftButton:
+            return
+
         self.setSelected(not self.__selected)
 
         if self.isSelected():
