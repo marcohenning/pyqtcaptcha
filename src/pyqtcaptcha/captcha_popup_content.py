@@ -1,8 +1,11 @@
+import os
+import random
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QPainter, QPixmap, QPen, QFont, QFontMetrics, QImage
 from qtpy.QtWidgets import QWidget, QLabel, QPushButton
 from .captcha_image_button import CaptchaImageButton
 from .captcha_icon_button import CaptchaIconButton
+from .captcha_enums import CaptchaType, CaptchaTask, CaptchaDifficulty
 from .constants import *
 
 
@@ -15,6 +18,11 @@ class CaptchaPopupContent(QLabel):
         self.setFixedSize(CAPTCHA_POPUP_SIZE)
         self.setStyleSheet('background: #FFF; border: 1px solid gray; border-radius: 10px;')
 
+        self.__type = CaptchaType.VISUAL
+        self.__task = CaptchaTask.IMAGE
+        self.__difficulty = CaptchaDifficulty.MEDIUM
+        self.__file = None
+
         self.submit = QPushButton(self)
         self.submit.setText('SUBMIT')
         self.submit.setStyleSheet('QPushButton {color: #FFF; background: %s; border: none; border-radius: 5px;}'
@@ -23,6 +31,7 @@ class CaptchaPopupContent(QLabel):
         self.submit.setFixedSize(SUBMIT_BUTTON_SIZE)
         self.submit.move(SUBMIT_BUTTON_POSITION)
         self.submit.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.submit.clicked.connect(self.__handle_submit)
 
         font = self.submit.font()
         font.setBold(True)
@@ -31,6 +40,7 @@ class CaptchaPopupContent(QLabel):
         self.__button_refresh = CaptchaIconButton(self)
         self.__button_refresh.move(8, SUBMIT_BUTTON_POSITION.y())
         self.__button_refresh.setIcon(QImage(DIRECTORY + '/files/icons/refresh.png'))
+        self.__button_refresh.clicked.connect(self.__handle_refresh)
 
         self.__button_visual = CaptchaIconButton(self)
         self.__button_visual.move(44, SUBMIT_BUTTON_POSITION.y())
@@ -40,6 +50,7 @@ class CaptchaPopupContent(QLabel):
         self.__button_audio = CaptchaIconButton(self)
         self.__button_audio.move(44, SUBMIT_BUTTON_POSITION.y())
         self.__button_audio.setIcon(QImage(DIRECTORY + '/files/icons/headphones.png'))
+        self.__button_audio.clicked.connect(self.__handle_audio)
 
         self.__buttons_image = []
         self.__buttons_square = []
@@ -150,6 +161,87 @@ class CaptchaPopupContent(QLabel):
         for button in self.__buttons_square:
             button.setVisible(False)
 
+    def __handle_submit(self):
+        pass
+
+    def __handle_refresh(self):
+        self.__load_next_task()
+
+    def __handle_visual(self):
+        pass
+
+    def __handle_audio(self):
+        pass
+
+    def __load_next_task(self):
+        if self.__type == CaptchaType.VISUAL:
+            if self.__difficulty == CaptchaDifficulty.EASY:
+                self.__task = CaptchaTask.IMAGE
+            elif self.__difficulty == CaptchaDifficulty.HARD:
+                self.__task = CaptchaTask.SQUARE
+            else:
+                self.__task = CaptchaTask(random.randint(1, 2))
+        else:
+            self.__task = CaptchaTask.AUDIO
+
+        if self.__task == CaptchaTask.IMAGE:
+            self.__file = self.__find_random_task('image')
+            self.__load_images()
+
+        elif self.__task == CaptchaTask.SQUARE:
+            self.__file = self.__find_random_task('square')
+            self.__load_squares()
+
+        else:
+            self.__file = self.__find_random_task('audio')
+            self.__load_audio()
+
+    def __find_random_task(self, folder: str) -> int:
+        tasks = os.listdir(DIRECTORY + '/files/' + folder)
+        if len(tasks) == 0:
+            return -1
+        task = self.__file
+        while task == self.__file:
+            task = random.randint(1, len(tasks))
+        return task
+
+    def __load_images(self):
+        pass
+
+    def __load_squares(self):
+
+        image = QPixmap(DIRECTORY + '/files/square/{}.png'.format(self.__file))
+
+        self.__button_square_1.setImage(image.copy(SQUARE_SIZE * 0, SQUARE_SIZE * 0, SQUARE_SIZE, SQUARE_SIZE))
+        self.__button_square_2.setImage(image.copy(SQUARE_SIZE * 1, SQUARE_SIZE * 0, SQUARE_SIZE, SQUARE_SIZE))
+        self.__button_square_3.setImage(image.copy(SQUARE_SIZE * 2, SQUARE_SIZE * 0, SQUARE_SIZE, SQUARE_SIZE))
+        self.__button_square_4.setImage(image.copy(SQUARE_SIZE * 3, SQUARE_SIZE * 0, SQUARE_SIZE, SQUARE_SIZE))
+
+        self.__button_square_5.setImage(image.copy(SQUARE_SIZE * 0, SQUARE_SIZE * 1, SQUARE_SIZE, SQUARE_SIZE))
+        self.__button_square_6.setImage(image.copy(SQUARE_SIZE * 1, SQUARE_SIZE * 1, SQUARE_SIZE, SQUARE_SIZE))
+        self.__button_square_7.setImage(image.copy(SQUARE_SIZE * 2, SQUARE_SIZE * 1, SQUARE_SIZE, SQUARE_SIZE))
+        self.__button_square_8.setImage(image.copy(SQUARE_SIZE * 3, SQUARE_SIZE * 1, SQUARE_SIZE, SQUARE_SIZE))
+
+        self.__button_square_9.setImage(image.copy(SQUARE_SIZE * 0, SQUARE_SIZE * 2, SQUARE_SIZE, SQUARE_SIZE))
+        self.__button_square_10.setImage(image.copy(SQUARE_SIZE * 1, SQUARE_SIZE * 2, SQUARE_SIZE, SQUARE_SIZE))
+        self.__button_square_11.setImage(image.copy(SQUARE_SIZE * 2, SQUARE_SIZE * 2, SQUARE_SIZE, SQUARE_SIZE))
+        self.__button_square_12.setImage(image.copy(SQUARE_SIZE * 3, SQUARE_SIZE * 2, SQUARE_SIZE, SQUARE_SIZE))
+
+        self.__button_square_13.setImage(image.copy(SQUARE_SIZE * 0, SQUARE_SIZE * 3, SQUARE_SIZE, SQUARE_SIZE))
+        self.__button_square_14.setImage(image.copy(SQUARE_SIZE * 1, SQUARE_SIZE * 3, SQUARE_SIZE, SQUARE_SIZE))
+        self.__button_square_15.setImage(image.copy(SQUARE_SIZE * 2, SQUARE_SIZE * 3, SQUARE_SIZE, SQUARE_SIZE))
+        self.__button_square_16.setImage(image.copy(SQUARE_SIZE * 3, SQUARE_SIZE * 3, SQUARE_SIZE, SQUARE_SIZE))
+
+        for button in self.__buttons_image:
+            button.setVisible(False)
+
+        for button in self.__buttons_square:
+            button.setSelected(False)
+            button.setVisible(True)
+
+    def __load_audio(self):
+        pass
+
     def paintEvent(self, event):
         super().paintEvent(event)
 
@@ -172,32 +264,6 @@ class CaptchaPopupContent(QLabel):
         font_large.setBold(True)
         painter.setFont(font_large)
         painter.drawText(16, 40 + height + int(height * 0.5), 'traffic lights')
-
-        self.image = QPixmap(DIRECTORY + '/files/square/6.png')
-        dimension = 77
-
-        self.__button_square_1.setImage(self.image.copy(0, 0, dimension, dimension))
-        self.__button_square_2.setImage(self.image.copy(dimension, 0, dimension, dimension))
-        self.__button_square_3.setImage(self.image.copy(dimension * 2, 0, dimension, dimension))
-        self.__button_square_4.setImage(self.image.copy(dimension * 3, 0, dimension, dimension))
-
-        self.__button_square_5.setImage(self.image.copy(0, dimension, dimension, dimension))
-        self.__button_square_6.setImage(self.image.copy(dimension, dimension, dimension, dimension))
-        self.__button_square_7.setImage(self.image.copy(dimension * 2, dimension, dimension, dimension))
-        self.__button_square_8.setImage(self.image.copy(dimension * 3, dimension, dimension, dimension))
-
-        self.__button_square_9.setImage(self.image.copy(0, dimension * 2, dimension, dimension))
-        self.__button_square_10.setImage(self.image.copy(dimension, dimension * 2, dimension, dimension))
-        self.__button_square_11.setImage(self.image.copy(dimension * 2, dimension * 2, dimension, dimension))
-        self.__button_square_12.setImage(self.image.copy(dimension * 3, dimension * 2, dimension, dimension))
-
-        self.__button_square_13.setImage(self.image.copy(0, dimension * 3, dimension, dimension))
-        self.__button_square_14.setImage(self.image.copy(dimension, dimension * 3, dimension, dimension))
-        self.__button_square_15.setImage(self.image.copy(dimension * 2, dimension * 3, dimension, dimension))
-        self.__button_square_16.setImage(self.image.copy(dimension * 3, dimension * 3, dimension, dimension))
-
-        for button in self.__buttons_square:
-            button.setVisible(True)
 
     def focusOutEvent(self, event):
         super().focusOutEvent(event)

@@ -87,9 +87,19 @@ class CaptchaImageButton(QPushButton):
         elif self.size().width() == 77:
             self.__padding_max = 7
 
+        self.update()
+
     def isSelected(self) -> bool:
         return self.__selected
 
     def setSelected(self, selected: bool) -> None:
         self.__selected = selected
+        self.__timeline_increase_padding.stop()
+        self.__timeline_decrease_padding.stop()
+
+        if self.isSelected():
+            self.__padding = self.__padding_max
+        else:
+            self.__padding = 0
+
         self.update()
