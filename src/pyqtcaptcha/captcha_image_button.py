@@ -96,10 +96,6 @@ class CaptchaImageButton(QPushButton):
         self.__selected = selected
         self.__timeline_increase_padding.stop()
         self.__timeline_decrease_padding.stop()
-
-        if self.isSelected():
-            self.__padding = self.__padding_max
-        else:
-            self.__padding = 0
+        self.__padding = 0
 
         self.update()

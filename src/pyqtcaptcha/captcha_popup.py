@@ -13,7 +13,7 @@ class CaptchaPopup(QWidget):
 
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.setFixedSize(CAPTCHA_POPUP_SIZE)
+        self.setFixedSize(CAPTCHA_POPUP_SIZE_VISUAL)
 
         self.__captcha_popup_content = CaptchaPopupContent(self)
         self.__captcha_popup_content.setFocus()

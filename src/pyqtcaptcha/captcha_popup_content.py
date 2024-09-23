@@ -1,8 +1,7 @@
-import os
 import random
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QPainter, QPixmap, QPen, QFont, QFontMetrics, QImage
-from qtpy.QtWidgets import QWidget, QLabel, QPushButton
+from qtpy.QtWidgets import QWidget, QLabel, QPushButton, QLineEdit
 from .captcha_image_button import CaptchaImageButton
 from .captcha_icon_button import CaptchaIconButton
 from .captcha_enums import CaptchaType, CaptchaTask, CaptchaDifficulty
@@ -15,7 +14,7 @@ class CaptchaPopupContent(QLabel):
         super(CaptchaPopupContent, self).__init__(parent)
 
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        self.setFixedSize(CAPTCHA_POPUP_SIZE)
+        self.setFixedSize(CAPTCHA_POPUP_SIZE_VISUAL)
         self.setStyleSheet('background: #FFF; border: 1px solid gray; border-radius: 10px;')
 
         self.__type = CaptchaType.VISUAL
@@ -27,9 +26,9 @@ class CaptchaPopupContent(QLabel):
         self.submit.setText('SUBMIT')
         self.submit.setStyleSheet('QPushButton {color: #FFF; background: %s; border: none; border-radius: 5px;}'
                                   'QPushButton::hover {color: #FFF; background: %s; border: none; border-radius: 5px;}'
-                                  % (CAPTCHA_POPUP_ACCENT_COLOR.name(), CAPTCHA_POPUP_ACCENT_COLOR_PRESSED.name()))
+                                  % (CAPTCHA_POPUP_ACCENT_COLOR.name(), CAPTCHA_POPUP_ACCENT_COLOR_HOVER.name()))
         self.submit.setFixedSize(SUBMIT_BUTTON_SIZE)
-        self.submit.move(SUBMIT_BUTTON_POSITION)
+        self.submit.move(SUBMIT_BUTTON_POSITION_VISUAL)
         self.submit.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.submit.clicked.connect(self.__handle_submit)
 
@@ -38,19 +37,39 @@ class CaptchaPopupContent(QLabel):
         self.submit.setFont(font)
 
         self.__button_refresh = CaptchaIconButton(self)
-        self.__button_refresh.move(8, SUBMIT_BUTTON_POSITION.y())
+        self.__button_refresh.move(8, SUBMIT_BUTTON_POSITION_VISUAL.y())
         self.__button_refresh.setIcon(QImage(DIRECTORY + '/files/icons/refresh.png'))
         self.__button_refresh.clicked.connect(self.__handle_refresh)
 
         self.__button_visual = CaptchaIconButton(self)
-        self.__button_visual.move(44, SUBMIT_BUTTON_POSITION.y())
+        self.__button_visual.move(44, SUBMIT_BUTTON_POSITION_VISUAL.y())
         self.__button_visual.setIcon(QImage(DIRECTORY + '/files/icons/eye.png'))
         self.__button_visual.setVisible(False)
+        self.__button_visual.clicked.connect(self.__handle_visual)
 
         self.__button_audio = CaptchaIconButton(self)
-        self.__button_audio.move(44, SUBMIT_BUTTON_POSITION.y())
+        self.__button_audio.move(44, SUBMIT_BUTTON_POSITION_VISUAL.y())
         self.__button_audio.setIcon(QImage(DIRECTORY + '/files/icons/headphones.png'))
         self.__button_audio.clicked.connect(self.__handle_audio)
+
+        self.__button_play = QPushButton(self)
+        self.__button_play.setText('PLAY')
+        self.__button_play.setStyleSheet('QPushButton {color: #FFF; background: %s; border: none; border-radius: 5px;}'
+                                         'QPushButton::hover {color: #FFF; background: %s; border: none; border-radius: 5px;}'
+                                         % (SECONDARY_COLOR.name(), SECONDARY_COLOR_HOVER.name()))
+        self.__button_play.setFixedSize(314, 60)
+        self.__button_play.move(IMAGE_COLUMN_1, IMAGE_ROW_1)
+        self.__button_play.setFont(font)
+        self.__button_play.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.__button_play.setVisible(False)
+
+        self.__textfield_audio = QLineEdit(self)
+        self.__textfield_audio.setPlaceholderText('Test')
+        self.__textfield_audio.setStyleSheet('color: %s; background: #FFF; border: 1px solid %s; border-radius: 5px;' % (SECONDARY_COLOR.name(), SECONDARY_COLOR.name()))
+        self.__textfield_audio.setFixedSize(314, 45)
+        self.__textfield_audio.move(IMAGE_COLUMN_1, IMAGE_ROW_1 + 67)
+        self.__textfield_audio.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.__textfield_audio.setVisible(False)
 
         self.__buttons_image = []
         self.__buttons_square = []
@@ -168,10 +187,40 @@ class CaptchaPopupContent(QLabel):
         self.__load_next_task()
 
     def __handle_visual(self):
-        pass
+        self.__type = CaptchaType.VISUAL
+
+        self.setFixedSize(CAPTCHA_POPUP_SIZE_VISUAL)
+        self.parent().setFixedSize(CAPTCHA_POPUP_SIZE_VISUAL)
+        self.submit.move(SUBMIT_BUTTON_POSITION_VISUAL)
+        self.__button_visual.move(self.__button_visual.pos().x(), SUBMIT_BUTTON_POSITION_VISUAL.y())
+        self.__button_refresh.move(self.__button_refresh.pos().x(), SUBMIT_BUTTON_POSITION_VISUAL.y())
+
+        self.__button_play.setVisible(False)
+        self.__textfield_audio.setVisible(False)
+        self.__button_visual.setVisible(False)
+        self.__button_audio.setVisible(True)
+        self.__load_next_task()
 
     def __handle_audio(self):
-        pass
+        self.__type = CaptchaType.AUDIO
+
+        self.setFixedSize(CAPTCHA_POPUP_SIZE_AUDIO)
+        self.parent().setFixedSize(CAPTCHA_POPUP_SIZE_AUDIO)
+        self.submit.move(SUBMIT_BUTTON_POSITION_AUDIO)
+        self.__button_visual.move(self.__button_visual.pos().x(), SUBMIT_BUTTON_POSITION_AUDIO.y())
+        self.__button_refresh.move(self.__button_refresh.pos().x(), SUBMIT_BUTTON_POSITION_AUDIO.y())
+
+        for button in self.__buttons_image:
+            button.setVisible(False)
+        for button in self.__buttons_square:
+            button.setVisible(False)
+
+        self.__button_audio.setVisible(False)
+        self.__button_visual.setVisible(True)
+        self.__button_play.setVisible(True)
+        self.__textfield_audio.setVisible(True)
+
+        self.__load_next_task()
 
     def __load_next_task(self):
         if self.__type == CaptchaType.VISUAL:

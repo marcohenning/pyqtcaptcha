@@ -16,8 +16,8 @@ class CaptchaIconButton(QPushButton):
         self.__icon = None
         self.__icon_hover = None
         self.__hover = False
-        self.__color = QColor(100, 100, 100)
-        self.__color_hover = QColor(80, 80, 80)
+        self.__color = SECONDARY_COLOR
+        self.__color_hover = SECONDARY_COLOR_HOVER
 
     def __recolor_icon(self, icon: QImage, color: QColor) -> QPixmap:
         for x in range(0, icon.width()):
