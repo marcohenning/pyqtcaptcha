@@ -1,4 +1,7 @@
 import random
+import contextlib
+with contextlib.redirect_stdout(None):  # Suppress import message
+    from pygame import mixer
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QPainter, QPixmap, QPen, QFont, QFontMetrics, QImage
 from qtpy.QtWidgets import QWidget, QLabel, QPushButton, QLineEdit
@@ -21,6 +24,9 @@ class CaptchaPopupContent(QLabel):
         self.__task = CaptchaTask.IMAGE
         self.__difficulty = CaptchaDifficulty.MEDIUM
         self.__file = None
+
+        mixer.init()
+        mixer.music.load('C:/Users/MH/Desktop/test.mp3')
 
         self.submit = QPushButton(self)
         self.submit.setText('SUBMIT')
@@ -62,6 +68,7 @@ class CaptchaPopupContent(QLabel):
         self.__button_play.setFont(font)
         self.__button_play.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.__button_play.setVisible(False)
+        self.__button_play.clicked.connect(self.__handle_play)
 
         self.__textfield_audio = QLineEdit(self)
         self.__textfield_audio.setPlaceholderText('Test')
@@ -180,6 +187,8 @@ class CaptchaPopupContent(QLabel):
         for button in self.__buttons_square:
             button.setVisible(False)
 
+        self.__load_next_task()
+
     def __handle_submit(self):
         pass
 
@@ -221,6 +230,9 @@ class CaptchaPopupContent(QLabel):
         self.__textfield_audio.setVisible(True)
 
         self.__load_next_task()
+
+    def __handle_play(self):
+        mixer.music.play()
 
     def __load_next_task(self):
         if self.__type == CaptchaType.VISUAL:
