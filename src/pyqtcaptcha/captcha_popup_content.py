@@ -4,7 +4,7 @@ with contextlib.redirect_stdout(None):  # Suppress import message
     from pygame import mixer
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QPainter, QPixmap, QPen, QFont, QFontMetrics, QImage
-from qtpy.QtWidgets import QWidget, QLabel, QPushButton, QLineEdit
+from qtpy.QtWidgets import QWidget, QLabel, QPushButton
 from .captcha_image_button import CaptchaImageButton
 from .captcha_icon_button import CaptchaIconButton
 from .captcha_textfield import CaptchaTextField
@@ -16,25 +16,54 @@ from .constants import *
 
 class CaptchaPopupContent(QLabel):
 
-    def __init__(self, parent: QWidget = None):
+    def __init__(
+        self,
+        border_radius: int,
+        foreground_color: QColor,
+        background_color: QColor,
+        border_color: QColor,
+        primary_color: QColor,
+        primary_color_hover: QColor,
+        secondary_color: QColor,
+        secondary_color_hover: QColor,
+        parent: QWidget = None
+    ):
+
         super(CaptchaPopupContent, self).__init__(parent)
 
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setFixedSize(CAPTCHA_POPUP_SIZE_VISUAL)
-        self.setStyleSheet('background: #FFF; border: 1px solid gray; border-radius: 10px;')
 
         self.__type = CaptchaType.VISUAL
         self.__task = CaptchaTask.IMAGE
         self.__difficulty = CaptchaDifficulty.MEDIUM
         self.__file = None
 
+        self.__border_radius = border_radius
+        self.__foreground_color = foreground_color
+        self.__background_color = background_color
+        self.__border_color = border_color
+        self.__primary_color = primary_color
+        self.__primary_color_hover = primary_color_hover
+        self.__secondary_color = secondary_color
+        self.__secondary_color_hover = secondary_color_hover
+
+        self.setStyleSheet('background: {}; border: 1px solid {}; border-radius: {}px;'
+                           .format(self.__background_color.name(),
+                                   self.__border_color.name(),
+                                   self.__border_radius))
         mixer.init()
 
         self.submit = QPushButton(self)
         self.submit.setText('SUBMIT')
-        self.submit.setStyleSheet('QPushButton {color: #FFF; background: %s; border: none; border-radius: 5px;}'
-                                  'QPushButton::hover {color: #FFF; background: %s; border: none; border-radius: 5px;}'
-                                  % (CAPTCHA_POPUP_ACCENT_COLOR.name(), CAPTCHA_POPUP_ACCENT_COLOR_HOVER.name()))
+        self.submit.setStyleSheet('QPushButton {color: %s; background: %s; border: none; border-radius: %spx;}'
+                                  'QPushButton::hover {color: %s; background: %s; border: none; border-radius: %spx;}'
+                                  % (self.__foreground_color.name(),
+                                     self.__primary_color.name(),
+                                     self.__border_radius // 2,
+                                     self.__foreground_color.name(),
+                                     self.__primary_color_hover.name(),
+                                     self.__border_radius // 2))
         self.submit.setFixedSize(SUBMIT_BUTTON_SIZE)
         self.submit.move(SUBMIT_BUTTON_POSITION_VISUAL)
         self.submit.setFocusPolicy(Qt.FocusPolicy.NoFocus)
@@ -46,25 +75,36 @@ class CaptchaPopupContent(QLabel):
 
         self.__button_refresh = CaptchaIconButton(self)
         self.__button_refresh.move(8, SUBMIT_BUTTON_POSITION_VISUAL.y())
+        self.__button_refresh.setColor(self.__secondary_color)
+        self.__button_refresh.setHoveredColor(self.__secondary_color_hover)
         self.__button_refresh.setIcon(QImage(DIRECTORY + '/files/icons/refresh.png'))
         self.__button_refresh.clicked.connect(self.__handle_refresh)
 
         self.__button_visual = CaptchaIconButton(self)
         self.__button_visual.move(44, SUBMIT_BUTTON_POSITION_VISUAL.y())
+        self.__button_visual.setColor(self.__secondary_color)
+        self.__button_visual.setHoveredColor(self.__secondary_color_hover)
         self.__button_visual.setIcon(QImage(DIRECTORY + '/files/icons/eye.png'))
         self.__button_visual.setVisible(False)
         self.__button_visual.clicked.connect(self.__handle_visual)
 
         self.__button_audio = CaptchaIconButton(self)
         self.__button_audio.move(44, SUBMIT_BUTTON_POSITION_VISUAL.y())
+        self.__button_audio.setColor(self.__secondary_color)
+        self.__button_audio.setHoveredColor(self.__secondary_color_hover)
         self.__button_audio.setIcon(QImage(DIRECTORY + '/files/icons/headphones.png'))
         self.__button_audio.clicked.connect(self.__handle_audio)
 
         self.__button_play = QPushButton(self)
         self.__button_play.setText('PLAY')
-        self.__button_play.setStyleSheet('QPushButton {color: #FFF; background: %s; border: none; border-radius: 5px;}'
-                                         'QPushButton::hover {color: #FFF; background: %s; border: none; border-radius: 5px;}'
-                                         % (SECONDARY_COLOR.name(), SECONDARY_COLOR_HOVER.name()))
+        self.__button_play.setStyleSheet('QPushButton {color: %s; background: %s; border: none; border-radius: %spx;}'
+                                         'QPushButton::hover {color: %s; background: %s; border: none; border-radius: %spx;}'
+                                          % (self.__foreground_color.name(),
+                                          self.__secondary_color.name(),
+                                          self.__border_radius // 2,
+                                          self.__foreground_color.name(),
+                                          self.__secondary_color_hover.name(),
+                                          self.__border_radius // 2))
         self.__button_play.setFixedSize(314, 60)
         self.__button_play.move(IMAGE_COLUMN_1, IMAGE_ROW_1)
         self.__button_play.setFont(font)
@@ -74,8 +114,11 @@ class CaptchaPopupContent(QLabel):
 
         self.__textfield_audio = CaptchaTextField(self)
         self.__textfield_audio.setPlaceholderText('What did you hear?')
-        self.__textfield_audio.setStyleSheet('color: %s; background: #FFF; border: 1px solid %s; border-radius: 5px; padding: 0 10 0 10px;'
-                                             % (SECONDARY_COLOR.name(), SECONDARY_COLOR.name()))
+        self.__textfield_audio.setStyleSheet('color: %s; background: %s; border: 1px solid %s; border-radius: %spx; padding: 0 10 0 10px;'
+                                             % (self.__secondary_color.name(),
+                                                self.__background_color.name(),
+                                                self.__secondary_color.name(),
+                                                self.__border_radius // 2))
         self.__textfield_audio.setFixedSize(314, 45)
         self.__textfield_audio.move(IMAGE_COLUMN_1, IMAGE_ROW_1 + 67)
         self.__textfield_audio.setVisible(False)
@@ -358,11 +401,11 @@ class CaptchaPopupContent(QLabel):
         painter.setPen(Qt.PenStyle.NoPen)
 
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        painter.setBrush(CAPTCHA_POPUP_ACCENT_COLOR)
-        painter.drawRoundedRect(8, 8, 314, 95, 5, 5)
+        painter.setBrush(self.__primary_color)
+        painter.drawRoundedRect(8, 8, 314, 95, self.__border_radius // 2, self.__border_radius // 2)
         painter.drawRect(8, 38, 314, 65)
 
-        painter.setPen(QPen(QColor('#FFF'), 3, Qt.PenStyle.SolidLine, Qt.PenCapStyle.SquareCap))
+        painter.setPen(QPen(self.__foreground_color, 3, Qt.PenStyle.SolidLine, Qt.PenCapStyle.SquareCap))
         painter.setFont(QFont('Arial', 12))
         font_metrics = QFontMetrics(painter.font())
         height = font_metrics.tightBoundingRect('Select all squares with').height()

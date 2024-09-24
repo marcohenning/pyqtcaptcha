@@ -51,7 +51,7 @@ class CaptchaImageButton(QPushButton):
                 painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
                 painter.setPen(Qt.PenStyle.NoPen)
-                painter.setBrush(CAPTCHA_POPUP_ACCENT_COLOR)
+                painter.setBrush(CAPTCHA_POPUP_PRIMARY_COLOR)
                 painter.drawEllipse(0, 0, 20, 20)
 
                 painter.setPen(QPen(QColor('#FFF'), 2, Qt.PenStyle.SolidLine, Qt.PenCapStyle.SquareCap))
