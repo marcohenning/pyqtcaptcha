@@ -7,6 +7,7 @@ from qtpy.QtGui import QPainter, QPixmap, QPen, QFont, QFontMetrics, QImage
 from qtpy.QtWidgets import QWidget, QLabel, QPushButton, QLineEdit
 from .captcha_image_button import CaptchaImageButton
 from .captcha_icon_button import CaptchaIconButton
+from .captcha_textfield import CaptchaTextField
 from .captcha_enums import CaptchaType, CaptchaTask, CaptchaDifficulty
 from .constants import *
 
@@ -26,7 +27,6 @@ class CaptchaPopupContent(QLabel):
         self.__file = None
 
         mixer.init()
-        mixer.music.load('C:/Users/MH/Desktop/test.mp3')
 
         self.submit = QPushButton(self)
         self.submit.setText('SUBMIT')
@@ -70,13 +70,14 @@ class CaptchaPopupContent(QLabel):
         self.__button_play.setVisible(False)
         self.__button_play.clicked.connect(self.__handle_play)
 
-        self.__textfield_audio = QLineEdit(self)
-        self.__textfield_audio.setPlaceholderText('Test')
-        self.__textfield_audio.setStyleSheet('color: %s; background: #FFF; border: 1px solid %s; border-radius: 5px;' % (SECONDARY_COLOR.name(), SECONDARY_COLOR.name()))
+        self.__textfield_audio = CaptchaTextField(self)
+        self.__textfield_audio.setPlaceholderText('What did you hear?')
+        self.__textfield_audio.setStyleSheet('color: %s; background: #FFF; border: 1px solid %s; border-radius: 5px; padding: 0 10 0 10px;'
+                                             % (SECONDARY_COLOR.name(), SECONDARY_COLOR.name()))
         self.__textfield_audio.setFixedSize(314, 45)
         self.__textfield_audio.move(IMAGE_COLUMN_1, IMAGE_ROW_1 + 67)
-        self.__textfield_audio.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.__textfield_audio.setVisible(False)
+        self.__textfield_audio.focus_out.connect(self.__handle_focus)
 
         self.__buttons_image = []
         self.__buttons_square = []
@@ -227,6 +228,7 @@ class CaptchaPopupContent(QLabel):
         self.__button_audio.setVisible(False)
         self.__button_visual.setVisible(True)
         self.__button_play.setVisible(True)
+        self.__textfield_audio.clear()
         self.__textfield_audio.setVisible(True)
 
         self.__load_next_task()
@@ -301,7 +303,12 @@ class CaptchaPopupContent(QLabel):
             button.setVisible(True)
 
     def __load_audio(self):
-        pass
+        mixer.music.load(DIRECTORY + '/files/audio/{}.mp3'.format(self.__file))
+
+    def __handle_focus(self):
+        if not self.hasFocus() and not self.__textfield_audio.hasFocus():
+            self.parent().aborted.emit()
+            self.parent().close()
 
     def paintEvent(self, event):
         super().paintEvent(event)
@@ -328,5 +335,4 @@ class CaptchaPopupContent(QLabel):
 
     def focusOutEvent(self, event):
         super().focusOutEvent(event)
-        self.parent().aborted.emit()
-        self.parent().close()
+        self.__handle_focus()
