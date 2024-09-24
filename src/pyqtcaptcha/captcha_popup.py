@@ -7,6 +7,8 @@ from .constants import *
 class CaptchaPopup(QWidget):
 
     aborted = Signal()
+    failed = Signal()
+    passed = Signal()
 
     def __init__(self, parent: QWidget = None):
         super(CaptchaPopup, self).__init__(parent)

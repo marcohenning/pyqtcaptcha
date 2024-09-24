@@ -9,6 +9,8 @@ from .captcha_image_button import CaptchaImageButton
 from .captcha_icon_button import CaptchaIconButton
 from .captcha_textfield import CaptchaTextField
 from .captcha_enums import CaptchaType, CaptchaTask, CaptchaDifficulty
+from .square_labels import square_labels
+from .audio_labels import audio_labels
 from .constants import *
 
 
@@ -191,7 +193,12 @@ class CaptchaPopupContent(QLabel):
         self.__load_next_task()
 
     def __handle_submit(self):
-        pass
+        if self.__task == CaptchaTask.IMAGE:
+            self.__validate_images()
+        elif self.__task == CaptchaTask.SQUARE:
+            self.__validate_squares()
+        else:
+            self.__validate_audio()
 
     def __handle_refresh(self):
         self.__load_next_task()
@@ -236,6 +243,39 @@ class CaptchaPopupContent(QLabel):
     def __handle_play(self):
         mixer.music.play()
 
+    def __validate_images(self):
+        pass
+
+    def __validate_squares(self):
+        answer = []
+        row = []
+        for button in self.__buttons_square:
+            row.append(button.isSelected())
+            if len(row) == 4:
+                answer.append(row)
+                row = []
+
+        for label in square_labels:
+            if int(label) == self.__file:
+                if answer == square_labels[label]:
+                    self.parent().passed.emit()
+                    self.parent().close()
+                else:
+                    self.parent().failed.emit()
+                    self.__load_next_task()
+                break
+
+    def __validate_audio(self):
+        for label in audio_labels:
+            if int(label) == self.__file:
+                if self.__textfield_audio.text().lower() == audio_labels[label]:
+                    self.parent().passed.emit()
+                    self.parent().close()
+                else:
+                    self.parent().failed.emit()
+                    self.__load_next_task()
+                break
+
     def __load_next_task(self):
         if self.__type == CaptchaType.VISUAL:
             if self.__difficulty == CaptchaDifficulty.EASY:
@@ -269,7 +309,8 @@ class CaptchaPopupContent(QLabel):
         return task
 
     def __load_images(self):
-        pass
+        for button in self.__buttons_square:
+            button.setVisible(False)
 
     def __load_squares(self):
 

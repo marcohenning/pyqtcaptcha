@@ -7,6 +7,8 @@ class Captcha(QPushButton):
 
     started = Signal()
     aborted = Signal()
+    failed = Signal()
+    passed = Signal()
 
     def __init__(self, parent: QWidget = None):
         super(Captcha, self).__init__(parent)
@@ -22,6 +24,8 @@ class Captcha(QPushButton):
         self.__captcha_popup.move(750, 300)
         self.__captcha_popup.show()
         self.__captcha_popup.aborted.connect(self.aborted.emit)
+        self.__captcha_popup.failed.connect(self.failed.emit)
+        self.__captcha_popup.passed.connect(self.passed.emit)
         self.started.emit()
 
     def text(self) -> str:
