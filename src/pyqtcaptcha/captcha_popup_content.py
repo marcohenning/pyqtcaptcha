@@ -349,14 +349,14 @@ class CaptchaPopupContent(QLabel):
             self.__task_category = image_label_types[random.randint(0, len(image_label_types) - 2)]
             self.__files = self.__find_random_tasks('image')
             self.__load_images()
-
         elif self.__task == CaptchaTask.SQUARE:
             self.__files = self.__find_random_tasks('square')
             self.__load_squares()
-
         else:
             self.__files = self.__find_random_tasks('audio')
             self.__load_audio()
+
+        self.update()
 
     def __find_random_tasks(self, folder: str) -> list:
         tasks = os.listdir(DIRECTORY + '/files/' + folder)
@@ -450,14 +450,27 @@ class CaptchaPopupContent(QLabel):
         painter.setPen(QPen(self.__foreground_color, 3, Qt.PenStyle.SolidLine, Qt.PenCapStyle.SquareCap))
         painter.setFont(QFont('Arial', 12))
         font_metrics = QFontMetrics(painter.font())
-        height = font_metrics.tightBoundingRect('Select all squares with').height()
-        painter.drawText(16, 40, 'Select all squares with')
+
+        text1 = ''
+        text2 = ''
+        if self.__task == CaptchaTask.IMAGE:
+            text1 = 'Select all images with'
+            text2 = self.__task_category + 's'
+        elif self.__task == CaptchaTask.SQUARE:
+            text1 = 'Select all squares with'
+            text2 = 'traffic lights'
+        else:
+            text1 = 'What word do you hear when'
+            text2 = 'pressing play'
+
+        height = font_metrics.tightBoundingRect(text1).height()
+        painter.drawText(16, 40, text1)
 
         font_large = painter.font()
         font_large.setPointSize(15)
         font_large.setBold(True)
         painter.setFont(font_large)
-        painter.drawText(16, 40 + height + int(height * 0.5), 'traffic lights')
+        painter.drawText(16, 40 + height + int(height * 0.5), text2)
 
     def focusOutEvent(self, event):
         super().focusOutEvent(event)
