@@ -9,6 +9,7 @@ from .captcha_image_button import CaptchaImageButton
 from .captcha_icon_button import CaptchaIconButton
 from .captcha_textfield import CaptchaTextField
 from .captcha_enums import CaptchaType, CaptchaTask, CaptchaDifficulty
+from .image_labels import image_labels, image_label_types
 from .square_labels import square_labels
 from .audio_labels import audio_labels
 from .constants import *
@@ -37,7 +38,8 @@ class CaptchaPopupContent(QLabel):
         self.__type = CaptchaType.VISUAL
         self.__task = CaptchaTask.IMAGE
         self.__difficulty = CaptchaDifficulty.MEDIUM
-        self.__file = None
+        self.__files = [1]
+        self.__task_category = image_label_types[0]
 
         self.__border_radius = border_radius
         self.__foreground_color = foreground_color
@@ -299,7 +301,7 @@ class CaptchaPopupContent(QLabel):
                 row = []
 
         for label in square_labels:
-            if int(label) == self.__file:
+            if int(label) == self.__files[0]:
                 if answer == square_labels[label]:
                     self.parent().passed.emit()
                     self.parent().close()
@@ -310,7 +312,7 @@ class CaptchaPopupContent(QLabel):
 
     def __validate_audio(self):
         for label in audio_labels:
-            if int(label) == self.__file:
+            if int(label) == self.__files[0]:
                 if self.__textfield_audio.text().lower() == audio_labels[label]:
                     self.parent().passed.emit()
                     self.parent().close()
@@ -331,33 +333,60 @@ class CaptchaPopupContent(QLabel):
             self.__task = CaptchaTask.AUDIO
 
         if self.__task == CaptchaTask.IMAGE:
-            self.__file = self.__find_random_task('image')
+            self.__task_category = image_label_types[random.randint(0, len(image_label_types) - 2)]
+            self.__files = self.__find_random_tasks('image')
             self.__load_images()
 
         elif self.__task == CaptchaTask.SQUARE:
-            self.__file = self.__find_random_task('square')
+            self.__files = self.__find_random_tasks('square')
             self.__load_squares()
 
         else:
-            self.__file = self.__find_random_task('audio')
+            self.__files = self.__find_random_tasks('audio')
             self.__load_audio()
 
-    def __find_random_task(self, folder: str) -> int:
+    def __find_random_tasks(self, folder: str) -> list:
         tasks = os.listdir(DIRECTORY + '/files/' + folder)
         if len(tasks) == 0:
-            return -1
-        task = self.__file
-        while task == self.__file:
-            task = random.randint(1, len(tasks))
-        return task
+            return [0]
+
+        current_task = self.__files[0]
+        if folder != 'image':
+            while current_task == self.__files[0]:
+                current_task = random.randint(1, len(tasks))
+            return [current_task]
+
+        new_tasks = []
+        amount_correct = random.randint(3, 7)
+
+        for i in range(amount_correct):
+            current_task = self.__files[0]
+            while current_task in self.__files or current_task in new_tasks or image_labels[str(current_task)] != self.__task_category:
+                current_task = random.randint(1, len(tasks))
+            new_tasks.append(current_task)
+
+        for i in range(9 - amount_correct):
+            current_task = self.__files[0]
+            while current_task in self.__files or current_task in new_tasks or image_labels[str(current_task)] != 'none':
+                current_task = random.randint(1, len(tasks))
+            new_tasks.append(current_task)
+
+        random.shuffle(new_tasks)
+        return new_tasks
 
     def __load_images(self):
+
+        for i in range(9):
+            self.__buttons_image[i].setImage(QPixmap(DIRECTORY + '/files/image/{}.png'.format(self.__files[i])))
+            self.__buttons_image[i].setSelected(False)
+            self.__buttons_image[i].setVisible(True)
+
         for button in self.__buttons_square:
             button.setVisible(False)
 
     def __load_squares(self):
 
-        image = QPixmap(DIRECTORY + '/files/square/{}.png'.format(self.__file))
+        image = QPixmap(DIRECTORY + '/files/square/{}.png'.format(self.__files[0]))
 
         self.__button_square_1.setImage(image.copy(SQUARE_SIZE * 0, SQUARE_SIZE * 0, SQUARE_SIZE, SQUARE_SIZE))
         self.__button_square_2.setImage(image.copy(SQUARE_SIZE * 1, SQUARE_SIZE * 0, SQUARE_SIZE, SQUARE_SIZE))
@@ -387,7 +416,7 @@ class CaptchaPopupContent(QLabel):
             button.setVisible(True)
 
     def __load_audio(self):
-        mixer.music.load(DIRECTORY + '/files/audio/{}.mp3'.format(self.__file))
+        mixer.music.load(DIRECTORY + '/files/audio/{}.mp3'.format(self.__files[0]))
 
     def __handle_focus(self):
         if not self.hasFocus() and not self.__textfield_audio.hasFocus():
