@@ -289,7 +289,20 @@ class CaptchaPopupContent(QLabel):
         mixer.music.play()
 
     def __validate_images(self):
-        pass
+        answer = []
+        for button in self.__buttons_image:
+            answer.append(button.isSelected())
+
+        correct_answer = []
+        for i in range(9):
+            correct_answer.append(image_labels[str(self.__files[i])] == self.__task_category)
+
+        if answer == correct_answer:
+            self.parent().passed.emit()
+            self.parent().close()
+        else:
+            self.parent().failed.emit()
+            self.__load_next_task()
 
     def __validate_squares(self):
         answer = []

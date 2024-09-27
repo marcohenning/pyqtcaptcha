@@ -64,7 +64,7 @@ class CaptchaImageButton(QPushButton):
         if event.button() != Qt.MouseButton.LeftButton:
             return
 
-        self.setSelected(not self.__selected)
+        self.__selected = not self.__selected
 
         if self.isSelected():
             self.__timeline_decrease_padding.stop()
@@ -83,7 +83,7 @@ class CaptchaImageButton(QPushButton):
         self.setFixedSize(self.__image.size())
 
         if self.size().width() == 102:
-            self.__padding_max = 9
+            self.__padding_max = 8
         elif self.size().width() == 77:
             self.__padding_max = 7
 
