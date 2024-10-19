@@ -1,5 +1,5 @@
 import math
-from qtpy.QtCore import Signal, Qt
+from qtpy.QtCore import Signal, Qt, QTimeLine, QEasingCurve
 from qtpy.QtGui import QColor, QPainter, QPen, QFont, QFontMetrics
 from qtpy.QtWidgets import QWidget, QPushButton
 from .captcha_popup import CaptchaPopup
@@ -19,6 +19,7 @@ class Captcha(QPushButton):
 
         self.__captcha_popup = None
         self.__text = ''
+        self.__passed = False
         super().setText('')
 
         self.__button_foreground_color = QColor(0, 255, 0)
@@ -36,11 +37,26 @@ class Captcha(QPushButton):
         self.__captcha_secondary_color = CAPTCHA_POPUP_SECONDARY_COLOR
         self.__captcha_secondary_color_hover = CAPTCHA_POPUP_SECONDARY_COLOR_HOVER
 
+        self.__timeline_checkmark_1 = QTimeLine(500)
+        self.__timeline_checkmark_1.setFrameRange(0, 1)
+        self.__timeline_checkmark_1.setEasingCurve(QEasingCurve.Type.Linear)
+        self.__timeline_checkmark_1.valueChanged.connect(self.update)
+
+        self.__timeline_checkmark_2 = QTimeLine(500)
+        self.__timeline_checkmark_2.setFrameRange(0, 1)
+        self.__timeline_checkmark_2.setEasingCurve(QEasingCurve.Type.Linear)
+        self.__timeline_checkmark_2.valueChanged.connect(self.update)
+        self.__timeline_checkmark_1.finished.connect(self.__timeline_checkmark_2.start)
+
         self.__update_style_sheet()
+        self.__update_checkmark_timelines()
 
         self.clicked.connect(self.__show_captcha_popup)
 
     def __show_captcha_popup(self):
+        if self.__passed:
+            return
+
         self.__captcha_popup_content = CaptchaPopupContent(
             self.__captcha_border_radius,
             self.__captcha_foreground_color,
@@ -56,8 +72,13 @@ class Captcha(QPushButton):
         self.__captcha_popup.show()
         self.__captcha_popup.aborted.connect(self.aborted.emit)
         self.__captcha_popup.failed.connect(self.failed.emit)
-        self.__captcha_popup.passed.connect(self.passed.emit)
+        self.__captcha_popup.passed.connect(self.__handle_passed)
         self.started.emit()
+
+    def __handle_passed(self):
+        self.__passed = True
+        self.passed.emit()
+        self.__timeline_checkmark_1.start()
 
     def __update_style_sheet(self):
         """Updates the stylesheet according to the current values."""
@@ -85,14 +106,50 @@ class Captcha(QPushButton):
         buffer = math.ceil((self.height() - dimension) / 2)
 
         painter.drawText(buffer * 2 + dimension, self.height() - math.floor((self.height() - rect.height()) / 2) - 1, self.__text)
-        painter.drawRoundedRect(buffer, buffer, dimension, dimension, 5, 5)
 
-        y_start = math.ceil(buffer + dimension / 2)
-        painter.drawLine(buffer, y_start, buffer + ((buffer + int(dimension * 0.8)) - y_start), buffer + int(dimension * 0.8))
-        x_start = buffer + ((buffer + int(dimension * 0.8)) - (buffer + dimension // 2))
-        y_start = buffer + int(dimension * 0.8)
-        y_end = buffer + int(dimension * 0.2)
-        painter.drawLine(x_start, y_start, x_start + (y_start - y_end), y_end)
+        if not self.__passed:
+            painter.drawRoundedRect(buffer, buffer, dimension, dimension, 5, 5)
+        else:
+            x_start_1 = buffer + int(dimension * 0.1)
+            y_start_1 = math.ceil(buffer + dimension / 2)
+            y_end_1 = buffer + int(dimension * 0.8)
+            x_end_1 = x_start_1 + (y_end_1 - y_start_1)
+
+            x_start_2 = x_end_1
+            y_start_2 = y_end_1
+            y_end_2 = buffer + int(dimension * 0.2)
+            x_end_2 = x_start_2 + (y_start_2 - y_end_2)
+
+            if self.__timeline_checkmark_1.state() == QTimeLine.State.Running:
+                added = self.__timeline_checkmark_1.currentFrame()
+                x_end_1 = x_start_1 + added
+                y_end_1 = y_start_1 + added
+
+                painter.drawLine(x_start_1, y_start_1, x_end_1, y_end_1)
+                return
+
+            elif self.__timeline_checkmark_2.state() == QTimeLine.State.Running:
+                added = self.__timeline_checkmark_2.currentFrame()
+                x_end_2 = x_start_2 + added
+                y_end_2 = y_start_2 - added
+
+            painter.drawLine(x_start_1, y_start_1, x_end_1, y_end_1)
+            painter.drawLine(x_start_2, y_start_2, x_end_2, y_end_2)
+
+    def __update_checkmark_timelines(self) -> None:
+        dimension = int(self.height() * 0.66)
+        buffer = math.ceil((self.height() - dimension) / 2)
+
+        y_start_1 = math.ceil(buffer + dimension / 2)
+        y_end_1 = buffer + int(dimension * 0.8)
+        self.__timeline_checkmark_1.setFrameRange(0, y_end_1 - y_start_1)
+
+        y_start_2 = y_end_1
+        y_end_2 = buffer + int(dimension * 0.2)
+        self.__timeline_checkmark_2.setFrameRange(0, y_start_2 - y_end_2)
+
+    def resizeEvent(self, event) -> None:
+        self.__update_checkmark_timelines()
 
     def text(self) -> str:
         return self.__text
@@ -182,3 +239,10 @@ class Captcha(QPushButton):
 
     def setCaptchaSecondaryColorHovered(self, color: QColor) -> None:
         self.__captcha_secondary_color_hover = color
+
+    def isPassed(self) -> bool:
+        return self.__passed
+
+    def reset(self) -> None:
+        self.__passed = False
+        self.update()
