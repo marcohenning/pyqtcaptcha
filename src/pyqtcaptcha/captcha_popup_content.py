@@ -123,6 +123,7 @@ class CaptchaPopupContent(QLabel):
                                                 self.__border_radius // 2))
         self.__textfield_audio.setFixedSize(314, 45)
         self.__textfield_audio.move(IMAGE_COLUMN_1, IMAGE_ROW_1 + 67)
+        font.setBold(False)
         self.__textfield_audio.setFont(font)
         self.__textfield_audio.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.__textfield_audio.setVisible(False)

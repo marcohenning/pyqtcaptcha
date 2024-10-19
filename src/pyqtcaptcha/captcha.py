@@ -68,8 +68,14 @@ class Captcha(QPushButton):
             self.__captcha_secondary_color,
             self.__captcha_secondary_color_hover
         )
-        self.__captcha_popup = CaptchaPopup(self.__captcha_popup_content)
-        self.__captcha_popup.move(750, 300)
+
+        actual_height = self.height() - self.__button_border_width * 2
+        dimension = int(actual_height * 0.66)
+        buffer = self.__button_border_width + math.ceil((actual_height - dimension) / 2)
+        x_position = self.parent().mapToGlobal(self.pos()).x() + dimension + buffer * 2
+        y_position = self.parent().mapToGlobal(self.pos()).y() + self.height() // 2
+
+        self.__captcha_popup = CaptchaPopup(self.__captcha_popup_content, QPoint(x_position, y_position))
         self.__captcha_popup.show()
         self.__captcha_popup.aborted.connect(self.aborted.emit)
         self.__captcha_popup.failed.connect(self.failed.emit)

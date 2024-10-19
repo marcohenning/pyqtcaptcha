@@ -10,7 +10,7 @@ class CaptchaPopup(QWidget):
     failed = Signal()
     passed = Signal()
 
-    def __init__(self, content: CaptchaPopupContent, parent: QWidget = None):
+    def __init__(self, content: CaptchaPopupContent, position: QPoint, parent: QWidget = None):
         super(CaptchaPopup, self).__init__(parent)
 
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
@@ -20,3 +20,12 @@ class CaptchaPopup(QWidget):
         self.__captcha_popup_content = content
         self.__captcha_popup_content.setParent(self)
         self.__captcha_popup_content.setFocus()
+
+        self.__position = position
+        self.__update_position()
+
+    def __update_position(self) -> None:
+        self.move(QPoint(self.__position.x(), self.__position.y() - (self.height() // 2)))
+
+    def resizeEvent(self, event) -> None:
+        self.__update_position()
