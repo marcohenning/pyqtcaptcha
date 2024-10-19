@@ -20,16 +20,17 @@ class Captcha(QPushButton):
         self.__captcha_popup = None
         self.__text = ''
         self.__passed = False
+        self.resize(130, 39)
         super().setText('')
 
-        self.__button_foreground_color = QColor(0, 255, 0)
-        self.__button_background_color = QColor(255, 0, 0)
-        self.__button_border_color = QColor(0, 0, 255)
+        self.__button_foreground_color = QColor(0, 0, 0)
+        self.__button_background_color = QColor(255, 255, 255)
+        self.__button_border_color = QColor(125, 125, 125)
         self.__button_border_width = 1
-        self.__button_border_radius = 0
-        self.__checkbox_color = QColor(0, 0, 255)
+        self.__button_border_radius = 4
+        self.__checkbox_color = QColor(125, 125, 125)
         self.__checkbox_width = 2
-        self.__checkmark_color = QColor('#009A31')
+        self.__checkmark_color = CHECKMARK_COLOR
 
         self.__captcha_border_radius = 10
         self.__captcha_foreground_color = CAPTCHA_POPUP_FOREGROUND_COLOR
