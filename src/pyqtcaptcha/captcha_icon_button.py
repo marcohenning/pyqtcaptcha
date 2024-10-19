@@ -55,6 +55,10 @@ class CaptchaIconButton(QPushButton):
         self.__hover = False
         self.update()
 
+    def setVisible(self, visible: bool) -> None:
+        super().setVisible(visible)
+        self.__hover = False
+
     def getIcon(self) -> QPixmap:
         return self.__icon
 
