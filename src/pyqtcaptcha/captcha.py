@@ -20,7 +20,7 @@ class Captcha(QPushButton):
         self.__captcha_popup = None
         self.__text = ''
         self.__passed = False
-        self.resize(130, 39)
+        self.resize(CAPTCHA_BUTTON_SIZE)
         super().setText('')
 
         self.__button_foreground_color = QColor(0, 0, 0)
@@ -30,7 +30,7 @@ class Captcha(QPushButton):
         self.__button_border_radius = 4
         self.__checkbox_color = QColor(125, 125, 125)
         self.__checkbox_width = 2
-        self.__checkmark_color = CHECKMARK_COLOR
+        self.__checkmark_color = CAPTCHA_BUTTON_CHECKMARK_COLOR
 
         self.__captcha_border_radius = 10
         self.__captcha_foreground_color = CAPTCHA_POPUP_FOREGROUND_COLOR
@@ -91,31 +91,34 @@ class Captcha(QPushButton):
     def __update_style_sheet(self):
         """Updates the stylesheet according to the current values."""
 
-        self.setStyleSheet('color: %s;'
-                           'background-color: %s;'
-                           'border: %dpx solid %s;'
-                           'border-radius: %dpx;'
-                           % (self.__button_foreground_color.name(),
-                              self.__button_background_color.name(),
-                              self.__button_border_width,
-                              self.__button_border_color.name(),
-                              self.__button_border_radius))
+        self.setStyleSheet(
+            'color: %s;'
+            'background-color: %s;'
+            'border: %dpx solid %s;'
+            'border-radius: %dpx;'
+            % (self.__button_foreground_color.name(),
+               self.__button_background_color.name(),
+               self.__button_border_width,
+               self.__button_border_color.name(),
+               self.__button_border_radius)
+        )
 
     def paintEvent(self, event) -> None:
         super().paintEvent(event)
 
         painter = QPainter(self)
-        painter.setPen(QPen(self.__checkbox_color, self.__checkbox_width, Qt.PenStyle.SolidLine, Qt.PenCapStyle.SquareCap))
+        painter.setPen(QPen(self.__checkbox_color, self.__checkbox_width,
+                            Qt.PenStyle.SolidLine, Qt.PenCapStyle.SquareCap))
         painter.setFont(self.font())
-        font_metrics = QFontMetrics(self.font())
 
         actual_height = self.height() - self.__button_border_width * 2
         dimension = int(actual_height * 0.66)
         buffer = self.__button_border_width + math.ceil((actual_height - dimension) / 2)
 
-        rect = font_metrics.tightBoundingRect(self.__text)
+        font_metrics = QFontMetrics(self.font())
+        bounding_rect = font_metrics.tightBoundingRect(self.__text)
         text_start_x = buffer * 2 + dimension
-        text_start_y = self.height() - math.floor((self.height() - rect.height()) / 2) - 1
+        text_start_y = self.height() - math.floor((self.height() - bounding_rect.height()) / 2) - 1
         max_text_width = self.width() - text_start_x - buffer
         text = font_metrics.elidedText(self.__text, Qt.ElideRight, max_text_width)
 
@@ -123,9 +126,11 @@ class Captcha(QPushButton):
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         if not self.__passed:
-            painter.drawRoundedRect(buffer, buffer, dimension, dimension, int(dimension * 0.2), int(dimension * 0.2))
+            painter.drawRoundedRect(buffer, buffer, dimension, dimension,
+                                    int(dimension * 0.2), int(dimension * 0.2))
         else:
-            painter.setPen(QPen(self.__checkmark_color, self.__checkbox_width, Qt.PenStyle.SolidLine, Qt.PenCapStyle.SquareCap))
+            painter.setPen(QPen(self.__checkmark_color, self.__checkbox_width,
+                                Qt.PenStyle.SolidLine, Qt.PenCapStyle.SquareCap))
 
             x_start_1 = buffer + int(dimension * 0.1)
             y_start_1 = math.ceil(buffer + dimension / 2)

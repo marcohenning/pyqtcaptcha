@@ -6,7 +6,12 @@ from .constants import *
 
 class CaptchaImageButton(QPushButton):
 
-    def __init__(self, parent: QWidget = None):
+    def __init__(
+        self,
+        foreground_color: QColor,
+        primary_color: QColor,
+        parent: QWidget = None
+    ):
         super(CaptchaImageButton, self).__init__(parent)
 
         self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
@@ -18,6 +23,8 @@ class CaptchaImageButton(QPushButton):
         self.__padding_max = 0
         self.__padding_min = 0
         self.__speed = 75
+        self.__foreground_color = foreground_color
+        self.__primary_color = primary_color
 
         self.__timeline_increase_padding = QTimeLine(self.__speed, self)
         self.__timeline_increase_padding.setFrameRange(self.__padding, self.__padding_max)
@@ -51,10 +58,10 @@ class CaptchaImageButton(QPushButton):
                 painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
                 painter.setPen(Qt.PenStyle.NoPen)
-                painter.setBrush(CAPTCHA_POPUP_PRIMARY_COLOR)
+                painter.setBrush(self.__primary_color)
                 painter.drawEllipse(0, 0, 20, 20)
 
-                painter.setPen(QPen(QColor('#FFF'), 2, Qt.PenStyle.SolidLine, Qt.PenCapStyle.SquareCap))
+                painter.setPen(QPen(self.__foreground_color, 2, Qt.PenStyle.SolidLine, Qt.PenCapStyle.SquareCap))
                 painter.drawLine(4, 10, 8, 14)
                 painter.drawLine(8, 14, 15, 6)
 
@@ -97,5 +104,4 @@ class CaptchaImageButton(QPushButton):
         self.__timeline_increase_padding.stop()
         self.__timeline_decrease_padding.stop()
         self.__padding = 0
-
         self.update()

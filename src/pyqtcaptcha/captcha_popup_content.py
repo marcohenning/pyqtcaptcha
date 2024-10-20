@@ -58,14 +58,18 @@ class CaptchaPopupContent(QLabel):
 
         self.submit = QPushButton(self)
         self.submit.setText('SUBMIT')
-        self.submit.setStyleSheet('QPushButton {color: %s; background: %s; border: none; border-radius: %spx;}'
-                                  'QPushButton::hover {color: %s; background: %s; border: none; border-radius: %spx;}'
-                                  % (self.__foreground_color.name(),
-                                     self.__primary_color.name(),
-                                     self.__border_radius // 2,
-                                     self.__foreground_color.name(),
-                                     self.__primary_color_hover.name(),
-                                     self.__border_radius // 2))
+
+        self.submit.setStyleSheet(
+            'QPushButton {color: %s; background: %s; border: none; border-radius: %spx;}'
+            'QPushButton::hover {color: %s; background: %s; border: none; border-radius: %spx;}'
+            % (self.__foreground_color.name(),
+               self.__primary_color.name(),
+               self.__border_radius // 2,
+               self.__foreground_color.name(),
+               self.__primary_color_hover.name(),
+               self.__border_radius // 2)
+        )
+
         self.submit.setFixedSize(SUBMIT_BUTTON_SIZE)
         self.submit.move(SUBMIT_BUTTON_POSITION_VISUAL)
         self.submit.setFocusPolicy(Qt.FocusPolicy.NoFocus)
@@ -99,14 +103,18 @@ class CaptchaPopupContent(QLabel):
 
         self.__button_play = QPushButton(self)
         self.__button_play.setText('PLAY')
-        self.__button_play.setStyleSheet('QPushButton {color: %s; background: %s; border: none; border-radius: %spx;}'
-                                         'QPushButton::hover {color: %s; background: %s; border: none; border-radius: %spx;}'
-                                          % (self.__foreground_color.name(),
-                                          self.__secondary_color.name(),
-                                          self.__border_radius // 2,
-                                          self.__foreground_color.name(),
-                                          self.__secondary_color_hover.name(),
-                                          self.__border_radius // 2))
+
+        self.__button_play.setStyleSheet(
+            'QPushButton {color: %s; background: %s; border: none; border-radius: %spx;}'
+            'QPushButton::hover {color: %s; background: %s; border: none; border-radius: %spx;}'
+            % (self.__foreground_color.name(),
+               self.__secondary_color.name(),
+               self.__border_radius // 2,
+               self.__foreground_color.name(),
+               self.__secondary_color_hover.name(),
+               self.__border_radius // 2)
+        )
+
         self.__button_play.setFixedSize(314, 60)
         self.__button_play.move(IMAGE_COLUMN_1, IMAGE_ROW_1)
         self.__button_play.setFont(font)
@@ -115,12 +123,16 @@ class CaptchaPopupContent(QLabel):
         self.__button_play.clicked.connect(self.__handle_play)
 
         self.__textfield_audio = CaptchaTextField(self)
-        self.__textfield_audio.setPlaceholderText('What did you hear?')
-        self.__textfield_audio.setStyleSheet('color: %s; background: %s; border: 1px solid %s; border-radius: %spx; padding: 0 10 0 10px;'
-                                             % (self.__secondary_color.name(),
-                                                self.__background_color.name(),
-                                                self.__secondary_color.name(),
-                                                self.__border_radius // 2))
+        self.__textfield_audio.setPlaceholderText('What word did you hear?')
+
+        self.__textfield_audio.setStyleSheet(
+            'color: %s; background: %s; border: 1px solid %s; border-radius: %spx; padding: 0 10 0 10px;'
+            % (self.__secondary_color.name(),
+               self.__background_color.name(),
+               self.__secondary_color.name(),
+               self.__border_radius // 2)
+        )
+
         self.__textfield_audio.setFixedSize(314, 45)
         self.__textfield_audio.move(IMAGE_COLUMN_1, IMAGE_ROW_1 + 67)
         font.setBold(False)
@@ -132,103 +144,103 @@ class CaptchaPopupContent(QLabel):
         self.__buttons_image = []
         self.__buttons_square = []
 
-        self.__button_image_1 = CaptchaImageButton(self)
+        self.__button_image_1 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_image_1.move(IMAGE_COLUMN_1, IMAGE_ROW_1)
         self.__buttons_image.append(self.__button_image_1)
 
-        self.__button_image_2 = CaptchaImageButton(self)
+        self.__button_image_2 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_image_2.move(IMAGE_COLUMN_2, IMAGE_ROW_1)
         self.__buttons_image.append(self.__button_image_2)
 
-        self.__button_image_3 = CaptchaImageButton(self)
+        self.__button_image_3 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_image_3.move(IMAGE_COLUMN_3, IMAGE_ROW_1)
         self.__buttons_image.append(self.__button_image_3)
 
-        self.__button_image_4 = CaptchaImageButton(self)
+        self.__button_image_4 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_image_4.move(IMAGE_COLUMN_1, IMAGE_ROW_2)
         self.__buttons_image.append(self.__button_image_4)
 
-        self.__button_image_5 = CaptchaImageButton(self)
+        self.__button_image_5 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_image_5.move(IMAGE_COLUMN_2, IMAGE_ROW_2)
         self.__buttons_image.append(self.__button_image_5)
 
-        self.__button_image_6 = CaptchaImageButton(self)
+        self.__button_image_6 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_image_6.move(IMAGE_COLUMN_3, IMAGE_ROW_2)
         self.__buttons_image.append(self.__button_image_6)
 
-        self.__button_image_7 = CaptchaImageButton(self)
+        self.__button_image_7 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_image_7.move(IMAGE_COLUMN_1, IMAGE_ROW_3)
         self.__buttons_image.append(self.__button_image_7)
 
-        self.__button_image_8 = CaptchaImageButton(self)
+        self.__button_image_8 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_image_8.move(IMAGE_COLUMN_2, IMAGE_ROW_3)
         self.__buttons_image.append(self.__button_image_8)
 
-        self.__button_image_9 = CaptchaImageButton(self)
+        self.__button_image_9 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_image_9.move(IMAGE_COLUMN_3, IMAGE_ROW_3)
         self.__buttons_image.append(self.__button_image_9)
 
-        self.__button_square_1 = CaptchaImageButton(self)
+        self.__button_square_1 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_1.move(SQUARE_COLUMN_1, SQUARE_ROW_1)
         self.__buttons_square.append(self.__button_square_1)
 
-        self.__button_square_2 = CaptchaImageButton(self)
+        self.__button_square_2 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_2.move(SQUARE_COLUMN_2, SQUARE_ROW_1)
         self.__buttons_square.append(self.__button_square_2)
 
-        self.__button_square_3 = CaptchaImageButton(self)
+        self.__button_square_3 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_3.move(SQUARE_COLUMN_3, SQUARE_ROW_1)
         self.__buttons_square.append(self.__button_square_3)
 
-        self.__button_square_4 = CaptchaImageButton(self)
+        self.__button_square_4 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_4.move(SQUARE_COLUMN_4, SQUARE_ROW_1)
         self.__buttons_square.append(self.__button_square_4)
 
-        self.__button_square_5 = CaptchaImageButton(self)
+        self.__button_square_5 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_5.move(SQUARE_COLUMN_1, SQUARE_ROW_2)
         self.__buttons_square.append(self.__button_square_5)
 
-        self.__button_square_6 = CaptchaImageButton(self)
+        self.__button_square_6 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_6.move(SQUARE_COLUMN_2, SQUARE_ROW_2)
         self.__buttons_square.append(self.__button_square_6)
 
-        self.__button_square_7 = CaptchaImageButton(self)
+        self.__button_square_7 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_7.move(SQUARE_COLUMN_3, SQUARE_ROW_2)
         self.__buttons_square.append(self.__button_square_7)
 
-        self.__button_square_8 = CaptchaImageButton(self)
+        self.__button_square_8 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_8.move(SQUARE_COLUMN_4, SQUARE_ROW_2)
         self.__buttons_square.append(self.__button_square_8)
 
-        self.__button_square_9 = CaptchaImageButton(self)
+        self.__button_square_9 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_9.move(SQUARE_COLUMN_1, SQUARE_ROW_3)
         self.__buttons_square.append(self.__button_square_9)
 
-        self.__button_square_10 = CaptchaImageButton(self)
+        self.__button_square_10 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_10.move(SQUARE_COLUMN_2, SQUARE_ROW_3)
         self.__buttons_square.append(self.__button_square_10)
 
-        self.__button_square_11 = CaptchaImageButton(self)
+        self.__button_square_11 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_11.move(SQUARE_COLUMN_3, SQUARE_ROW_3)
         self.__buttons_square.append(self.__button_square_11)
 
-        self.__button_square_12 = CaptchaImageButton(self)
+        self.__button_square_12 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_12.move(SQUARE_COLUMN_4, SQUARE_ROW_3)
         self.__buttons_square.append(self.__button_square_12)
 
-        self.__button_square_13 = CaptchaImageButton(self)
+        self.__button_square_13 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_13.move(SQUARE_COLUMN_1, SQUARE_ROW_4)
         self.__buttons_square.append(self.__button_square_13)
 
-        self.__button_square_14 = CaptchaImageButton(self)
+        self.__button_square_14 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_14.move(SQUARE_COLUMN_2, SQUARE_ROW_4)
         self.__buttons_square.append(self.__button_square_14)
 
-        self.__button_square_15 = CaptchaImageButton(self)
+        self.__button_square_15 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_15.move(SQUARE_COLUMN_3, SQUARE_ROW_4)
         self.__buttons_square.append(self.__button_square_15)
 
-        self.__button_square_16 = CaptchaImageButton(self)
+        self.__button_square_16 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_16.move(SQUARE_COLUMN_4, SQUARE_ROW_4)
         self.__buttons_square.append(self.__button_square_16)
 
@@ -454,8 +466,6 @@ class CaptchaPopupContent(QLabel):
         painter.setFont(QFont('Arial', 12))
         font_metrics = QFontMetrics(painter.font())
 
-        text1 = ''
-        text2 = ''
         if self.__task == CaptchaTask.IMAGE:
             text1 = 'Select all images with'
             text2 = self.__task_category + 's'
