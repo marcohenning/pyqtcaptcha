@@ -17,6 +17,8 @@ def test_initial_values(qtbot):
 
 
 def test_mouse_event(qtbot):
+    """Test selecting and deselecting the image"""
+
     color = QColor(0, 0, 0)
     image_button = CaptchaImageButton(color, color)
     image_button.setImage(QPixmap())

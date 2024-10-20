@@ -5,7 +5,7 @@ from src.pyqtcaptcha.captcha_textfield import CaptchaTextField
 
 
 def test_signal_emitted(qtbot):
-    """Test focus_out signal when losing focus"""
+    """Test focus_out signal being emitted when losing focus"""
 
     textfield = CaptchaTextField()
     qtbot.addWidget(textfield)

@@ -20,7 +20,7 @@ def test_initial_values(qtbot):
 
 
 def test_set_content(qtbot):
-    """Test setting the content"""
+    """Test setting the captcha popup's content"""
 
     position = QPoint(0, 0)
     color = QColor(0, 0, 0)
@@ -36,7 +36,7 @@ def test_set_content(qtbot):
 
 
 def test_set_position(qtbot):
-    """Test setting the position"""
+    """Test setting the captcha popup's position"""
 
     position = QPoint(0, 0)
     color = QColor(0, 0, 0)

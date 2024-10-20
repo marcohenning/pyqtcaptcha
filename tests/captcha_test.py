@@ -39,6 +39,8 @@ def test_initial_values(qtbot):
 
 
 def test_set_text(qtbot):
+    """Test setting the button text"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -48,6 +50,8 @@ def test_set_text(qtbot):
 
 
 def test_set_button_foreground_color(qtbot):
+    """Test setting the button foreground color"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -57,6 +61,8 @@ def test_set_button_foreground_color(qtbot):
 
 
 def test_set_button_background_color(qtbot):
+    """Test setting the button background color"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -66,6 +72,8 @@ def test_set_button_background_color(qtbot):
 
 
 def test_set_button_border_color(qtbot):
+    """Test setting the button border color"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -75,6 +83,8 @@ def test_set_button_border_color(qtbot):
 
 
 def test_set_button_border_width(qtbot):
+    """Test setting the button border width"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -83,6 +93,8 @@ def test_set_button_border_width(qtbot):
 
 
 def test_set_button_border_radius(qtbot):
+    """Test setting the button border radius"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -91,6 +103,8 @@ def test_set_button_border_radius(qtbot):
 
 
 def test_set_checkbox_color(qtbot):
+    """Test setting the checkbox color"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -100,6 +114,8 @@ def test_set_checkbox_color(qtbot):
 
 
 def test_set_checkbox_width(qtbot):
+    """Test setting the checkbox width"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -108,6 +124,8 @@ def test_set_checkbox_width(qtbot):
 
 
 def test_set_checkmark_color(qtbot):
+    """Test setting the checkmark color"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -117,6 +135,8 @@ def test_set_checkmark_color(qtbot):
 
 
 def test_set_captcha_foreground_color(qtbot):
+    """Test setting the captcha foreground color"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -126,6 +146,8 @@ def test_set_captcha_foreground_color(qtbot):
 
 
 def test_set_captcha_background_color(qtbot):
+    """Test setting the captcha background color"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -135,6 +157,8 @@ def test_set_captcha_background_color(qtbot):
 
 
 def test_set_captcha_border_color(qtbot):
+    """Test setting the captcha border color"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -144,6 +168,8 @@ def test_set_captcha_border_color(qtbot):
 
 
 def test_set_captcha_border_radius(qtbot):
+    """Test setting the captcha border radius"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -152,6 +178,8 @@ def test_set_captcha_border_radius(qtbot):
 
 
 def test_set_captcha_primary_color(qtbot):
+    """Test setting the captcha primary color"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -160,7 +188,9 @@ def test_set_captcha_primary_color(qtbot):
     assert captcha.getCaptchaPrimaryColor() == color
 
 
-def test_setCaptchaPrimaryColorHovered(qtbot):
+def test_set_captcha_primary_color_hovered(qtbot):
+    """Test setting the captcha hovered primary color"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -170,6 +200,8 @@ def test_setCaptchaPrimaryColorHovered(qtbot):
 
 
 def test_set_captcha_secondary_color(qtbot):
+    """Test setting the captcha secondary color"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -179,6 +211,8 @@ def test_set_captcha_secondary_color(qtbot):
 
 
 def test_set_captcha_secondary_color_hovered(qtbot):
+    """Test setting the captcha hovered secondary color"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -188,6 +222,8 @@ def test_set_captcha_secondary_color_hovered(qtbot):
 
 
 def test_set_captcha_difficulty(qtbot):
+    """Test setting the captcha difficulty"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -197,6 +233,8 @@ def test_set_captcha_difficulty(qtbot):
 
 
 def test_set_passed(qtbot):
+    """Test setting the passed flag"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -205,6 +243,8 @@ def test_set_passed(qtbot):
 
 
 def test_reset(qtbot):
+    """Test resetting the captcha"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
 
@@ -214,6 +254,8 @@ def test_reset(qtbot):
 
 
 def test_press_captcha_button(qtbot):
+    """Test pressing the captcha button"""
+
     captcha = Captcha()
     qtbot.addWidget(captcha)
     captcha.show()
@@ -226,6 +268,8 @@ def test_press_captcha_button(qtbot):
 
 
 def test_paint_event(qtbot):
+    """Test the paint event"""
+
     captcha = Captcha()
     captcha.setPassed(True)
     qtbot.addWidget(captcha)

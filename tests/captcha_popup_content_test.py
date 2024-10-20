@@ -31,6 +31,8 @@ def test_initial_values(qtbot):
 
 
 def test_set_files(qtbot):
+    """Test setting the files"""
+
     color = QColor(0, 0, 0)
     content = CaptchaPopupContent(CaptchaDifficulty.HARD, 0, color, color, color, color, color, color, color)
     qtbot.addWidget(content)
@@ -42,6 +44,8 @@ def test_set_files(qtbot):
 
 
 def test_set_textfield_content(qtbot):
+    """Test setting the audio textfield content"""
+
     color = QColor(0, 0, 0)
     content = CaptchaPopupContent(CaptchaDifficulty.HARD, 0, color, color, color, color, color, color, color)
     qtbot.addWidget(content)
@@ -53,6 +57,8 @@ def test_set_textfield_content(qtbot):
 
 
 def test_set_image_button_states(qtbot):
+    """Test setting the image button states"""
+
     color = QColor(0, 0, 0)
     content = CaptchaPopupContent(CaptchaDifficulty.HARD, 0, color, color, color, color, color, color, color)
     qtbot.addWidget(content)
@@ -64,6 +70,8 @@ def test_set_image_button_states(qtbot):
 
 
 def test_set_square_button_states(qtbot):
+    """Test setting the square button states"""
+
     color = QColor(0, 0, 0)
     content = CaptchaPopupContent(CaptchaDifficulty.HARD, 0, color, color, color, color, color, color, color)
     qtbot.addWidget(content)
@@ -75,6 +83,8 @@ def test_set_square_button_states(qtbot):
 
 
 def test_set_task_category(qtbot):
+    """Test setting the task category for the image task"""
+
     color = QColor(0, 0, 0)
     content = CaptchaPopupContent(CaptchaDifficulty.HARD, 0, color, color, color, color, color, color, color)
     qtbot.addWidget(content)
@@ -88,6 +98,8 @@ def test_set_task_category(qtbot):
 
 
 def test_switch_visual_audio(qtbot):
+    """Test switching between visual and audio challenges"""
+
     position = QPoint(0, 0)
     color = QColor(0, 0, 0)
 
@@ -108,6 +120,8 @@ def test_switch_visual_audio(qtbot):
 
 
 def test_load_next_task(qtbot):
+    """Test loading the next task"""
+
     position = QPoint(0, 0)
     color = QColor(0, 0, 0)
 
@@ -133,6 +147,8 @@ def test_load_next_task(qtbot):
 
 
 def test_submit_image_correct(qtbot):
+    """Test submitting a correct answer for the image task"""
+
     position = QPoint(0, 0)
     color = QColor(0, 0, 0)
 
@@ -163,6 +179,8 @@ def test_submit_image_correct(qtbot):
 
 
 def test_submit_image_incorrect(qtbot):
+    """Test submitting an incorrect answer for the image task"""
+
     position = QPoint(0, 0)
     color = QColor(0, 0, 0)
 
@@ -190,6 +208,8 @@ def test_submit_image_incorrect(qtbot):
 
 
 def test_submit_square_correct(qtbot):
+    """Test submitting a correct answer for the square task"""
+
     position = QPoint(0, 0)
     color = QColor(0, 0, 0)
 
@@ -213,6 +233,8 @@ def test_submit_square_correct(qtbot):
 
 
 def test_submit_square_incorrect(qtbot):
+    """Test submitting an incorrect answer for the square task"""
+
     position = QPoint(0, 0)
     color = QColor(0, 0, 0)
 
@@ -236,6 +258,8 @@ def test_submit_square_incorrect(qtbot):
 
 
 def test_submit_audio_correct(qtbot):
+    """Test submitting a correct answer for the audio task"""
+
     position = QPoint(0, 0)
     color = QColor(0, 0, 0)
 
@@ -260,6 +284,8 @@ def test_submit_audio_correct(qtbot):
 
 
 def test_submit_audio_incorrect(qtbot):
+    """Test submitting an incorrect answer for the audio task"""
+
     position = QPoint(0, 0)
     color = QColor(0, 0, 0)
 
@@ -283,6 +309,8 @@ def test_submit_audio_incorrect(qtbot):
 
 
 def test_paint_event(qtbot):
+    """Test the paint event"""
+
     color = QColor(0, 0, 0)
     color_to_test = QColor(255, 0, 0)
 

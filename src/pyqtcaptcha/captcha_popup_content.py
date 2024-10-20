@@ -30,6 +30,20 @@ class CaptchaPopupContent(QLabel):
         secondary_color_hover: QColor,
         parent: QWidget = None
     ):
+        """Create a new CaptchaPopupContent instance.
+        The captcha content is used to display the captcha popup including tasks etc.
+
+        :param difficulty: difficulty
+        :param border_radius: border radius
+        :param foreground_color: foreground color
+        :param background_color: background color
+        :param border_color: border color
+        :param primary_color: primary color
+        :param primary_color_hover: hovered primary color
+        :param secondary_color: secondary color
+        :param secondary_color_hover: hovered secondary color
+        :param parent: the parent widget
+        """
 
         super(CaptchaPopupContent, self).__init__(parent)
 
@@ -42,6 +56,7 @@ class CaptchaPopupContent(QLabel):
         self.__files = [1]
         self.__task_category = image_label_types[0]
 
+        # Styling settings
         self.__border_radius = border_radius
         self.__foreground_color = foreground_color
         self.__background_color = background_color
@@ -142,9 +157,11 @@ class CaptchaPopupContent(QLabel):
         self.__textfield_audio.setVisible(False)
         self.__textfield_audio.focus_out.connect(self.__handle_focus)
 
+        # Lists storing the buttons for selectable images and squares
         self.__buttons_image = []
         self.__buttons_square = []
 
+        # Buttons for selectable images
         self.__button_image_1 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_image_1.move(IMAGE_COLUMN_1, IMAGE_ROW_1)
         self.__buttons_image.append(self.__button_image_1)
@@ -181,6 +198,7 @@ class CaptchaPopupContent(QLabel):
         self.__button_image_9.move(IMAGE_COLUMN_3, IMAGE_ROW_3)
         self.__buttons_image.append(self.__button_image_9)
 
+        # Buttons for selectable squares
         self.__button_square_1 = CaptchaImageButton(self.__foreground_color, self.__primary_color, self)
         self.__button_square_1.move(SQUARE_COLUMN_1, SQUARE_ROW_1)
         self.__buttons_square.append(self.__button_square_1)
@@ -254,6 +272,8 @@ class CaptchaPopupContent(QLabel):
         self.load_next_task()
 
     def handle_submit(self):
+        """Handle the submit button being pressed"""
+
         if self.__task == CaptchaTask.IMAGE:
             self.__validate_images()
         elif self.__task == CaptchaTask.SQUARE:
@@ -262,9 +282,13 @@ class CaptchaPopupContent(QLabel):
             self.__validate_audio()
 
     def __handle_refresh(self):
+        """Handle the refresh button being pressed"""
+
         self.load_next_task()
 
     def handle_visual(self):
+        """Handle the visual button being pressed"""
+
         self.__type = CaptchaType.VISUAL
 
         self.setFixedSize(CAPTCHA_POPUP_SIZE_VISUAL)
@@ -280,6 +304,8 @@ class CaptchaPopupContent(QLabel):
         self.load_next_task()
 
     def handle_audio(self):
+        """Handle the audio button being pressed"""
+
         self.__type = CaptchaType.AUDIO
 
         self.setFixedSize(CAPTCHA_POPUP_SIZE_AUDIO)
@@ -302,9 +328,13 @@ class CaptchaPopupContent(QLabel):
         self.load_next_task()
 
     def __handle_play(self):
+        """Handle the play audio button being pressed"""
+
         mixer.music.play()
 
     def __validate_images(self):
+        """Validate the user's submission for an image task"""
+
         answer = []
         for button in self.__buttons_image:
             answer.append(button.isSelected())
@@ -321,6 +351,8 @@ class CaptchaPopupContent(QLabel):
             self.load_next_task()
 
     def __validate_squares(self):
+        """Validate the user's submission for a square task"""
+
         answer = []
         row = []
         for button in self.__buttons_square:
@@ -340,6 +372,8 @@ class CaptchaPopupContent(QLabel):
                 break
 
     def __validate_audio(self):
+        """Validate the user's submission for an audio task"""
+
         for label in audio_labels:
             if int(label) == self.__files[0]:
                 if self.__textfield_audio.text().lower() == audio_labels[label]:
@@ -351,6 +385,8 @@ class CaptchaPopupContent(QLabel):
                 break
 
     def load_next_task(self):
+        """Load the next task"""
+
         if self.__type == CaptchaType.VISUAL:
             if self.__difficulty == CaptchaDifficulty.EASY:
                 self.__task = CaptchaTask.IMAGE
@@ -375,6 +411,8 @@ class CaptchaPopupContent(QLabel):
         self.update()
 
     def __find_random_tasks(self, folder: str) -> list:
+        """Find a random task to choose as the next task"""
+
         tasks = os.listdir(DIRECTORY + '/files/' + folder)
         if len(tasks) == 0:
             return [0]
@@ -404,6 +442,7 @@ class CaptchaPopupContent(QLabel):
         return new_tasks
 
     def __load_images(self):
+        """Handle loading the task's images onto the buttons"""
 
         for i in range(9):
             self.__buttons_image[i].setImage(QPixmap(DIRECTORY + '/files/image/{}.png'.format(self.__files[i])))
@@ -414,6 +453,7 @@ class CaptchaPopupContent(QLabel):
             button.setVisible(False)
 
     def __load_squares(self):
+        """Handle loading the task's squares onto the buttons"""
 
         image = QPixmap(DIRECTORY + '/files/square/{}.png'.format(self.__files[0]))
 
@@ -445,14 +485,23 @@ class CaptchaPopupContent(QLabel):
             button.setVisible(True)
 
     def __load_audio(self):
+        """Handle loading the audio"""
+
         mixer.music.load(DIRECTORY + '/files/audio/{}.mp3'.format(self.__files[0]))
 
     def __handle_focus(self):
+        """Handle closing the popup and aborting when the user clicks anywhere outside the window"""
+
         if not self.hasFocus() and not self.__textfield_audio.hasFocus():
             self.parent().aborted.emit()
             self.parent().close()
 
     def paintEvent(self, event):
+        """Handle the widget drawing
+
+        :param event: the event sent by PyQt
+        """
+
         super().paintEvent(event)
 
         painter = QPainter(self)
@@ -487,65 +536,160 @@ class CaptchaPopupContent(QLabel):
         painter.drawText(16, 40 + height + int(height * 0.5), text2)
 
     def focusOutEvent(self, event):
+        """Handle the widget losing focus
+
+        :param event: the event sent by PyQt
+        """
+
         super().focusOutEvent(event)
         self.__handle_focus()
 
     def getType(self) -> CaptchaType:
+        """Get the current captcha type
+
+        :return: captcha type
+        """
+
         return self.__type
 
     def getTask(self) -> CaptchaTask:
+        """Get the current captcha task
+
+        :return: captcha task
+        """
+
         return self.__task
 
     def getDifficulty(self) -> CaptchaDifficulty:
+        """Get the current captcha difficulty
+
+        :return: captcha difficulty
+        """
+
         return self.__difficulty
 
     def getForegroundColor(self) -> QColor:
+        """Get the current foreground color
+
+        :return: foreground color
+        """
+
         return self.__foreground_color
 
     def getBackgroundColor(self) -> QColor:
+        """Get the current background color
+
+        :return: background color
+        """
+
         return self.__background_color
 
     def getBorderColor(self) -> QColor:
+        """Get the current border color
+
+        :return: border color
+        """
+
         return self.__border_color
 
     def getBorderRadius(self) -> int:
+        """Get the current border radius
+
+        :return: border radius
+        """
+
         return self.__border_radius
 
     def getPrimaryColor(self) -> QColor:
+        """Get the current primary color
+
+        :return: primary color
+        """
+
         return self.__primary_color
 
     def getPrimaryColorHovered(self) -> QColor:
+        """Get the current hovered primary color
+
+        :return: hovered primary color
+        """
+
         return self.__primary_color_hover
 
     def getSecondaryColor(self) -> QColor:
+        """Get the current secondary color
+
+        :return: secondary color
+        """
+
         return self.__secondary_color
 
     def getSecondaryColorHovered(self) -> QColor:
+        """Get the current hovered secondary color
+
+        :return: hovered secondary color
+        """
+
         return self.__secondary_color_hover
 
     def getTextfieldContent(self) -> str:
+        """Get the current textfield content
+
+        :return: textfield content
+        """
+
         return self.__textfield_audio.text()
 
     def setTextfieldContent(self, text: str) -> None:
+        """Set the textfield content
+
+        :param text: new textfield content
+        """
+
         self.__textfield_audio.setText(text)
 
     def getFiles(self) -> list:
+        """Get the current selected files
+
+        :return: selected files
+        """
+
         return self.__files
 
     def setFiles(self, files: list) -> None:
+        """Set the selected files
+
+        :param files: new selected files
+        """
+
         self.__files = files
 
     def getImageButtonStates(self) -> list:
+        """Get the current image button states (selected or not)
+
+        :return: image button states
+        """
+
         states = []
         for button in self.__buttons_image:
             states.append(button.isSelected())
         return states
 
     def setImageButtonStates(self, states: list) -> None:
+        """Set the image button states
+
+        :param states: new image button states
+        """
+
         for i in range(len(self.__buttons_image)):
             self.__buttons_image[i].setSelected(states[i])
 
     def getSquareButtonStates(self) -> list:
+        """Get the current square button states (selected or not)
+
+        :return: square button states
+        """
+
         state = []
         row = []
         for button in self.__buttons_square:
@@ -556,6 +700,11 @@ class CaptchaPopupContent(QLabel):
         return state
 
     def setSquareButtonStates(self, states: list) -> None:
+        """Set the square button states
+
+        :param states: new square button states
+        """
+
         count = 0
         for row in states:
             for state in row:
@@ -563,8 +712,18 @@ class CaptchaPopupContent(QLabel):
                 count += 1
 
     def getTaskCategory(self) -> str:
+        """Get the current task category (image labeling task)
+
+        :return: task category
+        """
+
         return self.__task_category
 
     def setTaskCategory(self, category: str) -> None:
+        """Set the current task category (image labeling task)
+
+        :param category: new task category
+        """
+
         if category in image_label_types and category is not 'none':
             self.__task_category = category

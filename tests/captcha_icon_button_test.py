@@ -1,7 +1,6 @@
-from PyQt6.QtCore import QRect, QPoint
-from PyQt6.QtGui import QColor, QPaintEvent, QMouseEvent
+from PyQt6.QtCore import QPoint
+from PyQt6.QtGui import QColor
 from PyQt6.QtTest import QTest
-from pytestqt.qt_compat import qt_api
 from src.pyqtcaptcha.captcha_icon_button import CaptchaIconButton
 
 
@@ -19,6 +18,8 @@ def test_initial_values(qtbot):
 
 
 def test_hover(qtbot):
+    """Test hovering over the widget"""
+
     icon_button = CaptchaIconButton()
     qtbot.addWidget(icon_button)
     icon_button.show()
