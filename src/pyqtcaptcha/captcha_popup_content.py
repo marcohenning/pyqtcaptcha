@@ -19,6 +19,7 @@ class CaptchaPopupContent(QLabel):
 
     def __init__(
         self,
+        difficulty: CaptchaDifficulty,
         border_radius: int,
         foreground_color: QColor,
         background_color: QColor,
@@ -37,7 +38,7 @@ class CaptchaPopupContent(QLabel):
 
         self.__type = CaptchaType.VISUAL
         self.__task = CaptchaTask.IMAGE
-        self.__difficulty = CaptchaDifficulty.MEDIUM
+        self.__difficulty = difficulty
         self.__files = [1]
         self.__task_category = image_label_types[0]
 
@@ -73,7 +74,7 @@ class CaptchaPopupContent(QLabel):
         self.submit.setFixedSize(SUBMIT_BUTTON_SIZE)
         self.submit.move(SUBMIT_BUTTON_POSITION_VISUAL)
         self.submit.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.submit.clicked.connect(self.__handle_submit)
+        self.submit.clicked.connect(self.handle_submit)
 
         font = self.submit.font()
         font.setBold(True)
@@ -92,14 +93,14 @@ class CaptchaPopupContent(QLabel):
         self.__button_visual.setHoveredColor(self.__secondary_color_hover)
         self.__button_visual.setIcon(QImage(DIRECTORY + '/files/icons/eye.png'))
         self.__button_visual.setVisible(False)
-        self.__button_visual.clicked.connect(self.__handle_visual)
+        self.__button_visual.clicked.connect(self.handle_visual)
 
         self.__button_audio = CaptchaIconButton(self)
         self.__button_audio.move(44, SUBMIT_BUTTON_POSITION_VISUAL.y())
         self.__button_audio.setColor(self.__secondary_color)
         self.__button_audio.setHoveredColor(self.__secondary_color_hover)
         self.__button_audio.setIcon(QImage(DIRECTORY + '/files/icons/headphones.png'))
-        self.__button_audio.clicked.connect(self.__handle_audio)
+        self.__button_audio.clicked.connect(self.handle_audio)
 
         self.__button_play = QPushButton(self)
         self.__button_play.setText('PLAY')
@@ -250,9 +251,9 @@ class CaptchaPopupContent(QLabel):
         for button in self.__buttons_square:
             button.setVisible(False)
 
-        self.__load_next_task()
+        self.load_next_task()
 
-    def __handle_submit(self):
+    def handle_submit(self):
         if self.__task == CaptchaTask.IMAGE:
             self.__validate_images()
         elif self.__task == CaptchaTask.SQUARE:
@@ -261,9 +262,9 @@ class CaptchaPopupContent(QLabel):
             self.__validate_audio()
 
     def __handle_refresh(self):
-        self.__load_next_task()
+        self.load_next_task()
 
-    def __handle_visual(self):
+    def handle_visual(self):
         self.__type = CaptchaType.VISUAL
 
         self.setFixedSize(CAPTCHA_POPUP_SIZE_VISUAL)
@@ -276,9 +277,9 @@ class CaptchaPopupContent(QLabel):
         self.__textfield_audio.setVisible(False)
         self.__button_visual.setVisible(False)
         self.__button_audio.setVisible(True)
-        self.__load_next_task()
+        self.load_next_task()
 
-    def __handle_audio(self):
+    def handle_audio(self):
         self.__type = CaptchaType.AUDIO
 
         self.setFixedSize(CAPTCHA_POPUP_SIZE_AUDIO)
@@ -298,7 +299,7 @@ class CaptchaPopupContent(QLabel):
         self.__textfield_audio.clear()
         self.__textfield_audio.setVisible(True)
 
-        self.__load_next_task()
+        self.load_next_task()
 
     def __handle_play(self):
         mixer.music.play()
@@ -317,7 +318,7 @@ class CaptchaPopupContent(QLabel):
             self.parent().close()
         else:
             self.parent().failed.emit()
-            self.__load_next_task()
+            self.load_next_task()
 
     def __validate_squares(self):
         answer = []
@@ -335,7 +336,7 @@ class CaptchaPopupContent(QLabel):
                     self.parent().close()
                 else:
                     self.parent().failed.emit()
-                    self.__load_next_task()
+                    self.load_next_task()
                 break
 
     def __validate_audio(self):
@@ -346,10 +347,10 @@ class CaptchaPopupContent(QLabel):
                     self.parent().close()
                 else:
                     self.parent().failed.emit()
-                    self.__load_next_task()
+                    self.load_next_task()
                 break
 
-    def __load_next_task(self):
+    def load_next_task(self):
         if self.__type == CaptchaType.VISUAL:
             if self.__difficulty == CaptchaDifficulty.EASY:
                 self.__task = CaptchaTask.IMAGE
@@ -488,3 +489,82 @@ class CaptchaPopupContent(QLabel):
     def focusOutEvent(self, event):
         super().focusOutEvent(event)
         self.__handle_focus()
+
+    def getType(self) -> CaptchaType:
+        return self.__type
+
+    def getTask(self) -> CaptchaTask:
+        return self.__task
+
+    def getDifficulty(self) -> CaptchaDifficulty:
+        return self.__difficulty
+
+    def getForegroundColor(self) -> QColor:
+        return self.__foreground_color
+
+    def getBackgroundColor(self) -> QColor:
+        return self.__background_color
+
+    def getBorderColor(self) -> QColor:
+        return self.__border_color
+
+    def getBorderRadius(self) -> int:
+        return self.__border_radius
+
+    def getPrimaryColor(self) -> QColor:
+        return self.__primary_color
+
+    def getPrimaryColorHovered(self) -> QColor:
+        return self.__primary_color_hover
+
+    def getSecondaryColor(self) -> QColor:
+        return self.__secondary_color
+
+    def getSecondaryColorHovered(self) -> QColor:
+        return self.__secondary_color_hover
+
+    def getTextfieldContent(self) -> str:
+        return self.__textfield_audio.text()
+
+    def setTextfieldContent(self, text: str) -> None:
+        self.__textfield_audio.setText(text)
+
+    def getFiles(self) -> list:
+        return self.__files
+
+    def setFiles(self, files: list) -> None:
+        self.__files = files
+
+    def getImageButtonStates(self) -> list:
+        states = []
+        for button in self.__buttons_image:
+            states.append(button.isSelected())
+        return states
+
+    def setImageButtonStates(self, states: list) -> None:
+        for i in range(len(self.__buttons_image)):
+            self.__buttons_image[i].setSelected(states[i])
+
+    def getSquareButtonStates(self) -> list:
+        state = []
+        row = []
+        for button in self.__buttons_square:
+            row.append(button.isSelected())
+            if len(row) == 4:
+                state.append(row)
+                row = []
+        return state
+
+    def setSquareButtonStates(self, states: list) -> None:
+        count = 0
+        for row in states:
+            for state in row:
+                self.__buttons_square[count].setSelected(state)
+                count += 1
+
+    def getTaskCategory(self) -> str:
+        return self.__task_category
+
+    def setTaskCategory(self, category: str) -> None:
+        if category in image_label_types and category is not 'none':
+            self.__task_category = category

@@ -4,6 +4,7 @@ from qtpy.QtGui import QColor, QPainter, QPen, QFont, QFontMetrics
 from qtpy.QtWidgets import QWidget, QPushButton
 from .captcha_popup import CaptchaPopup
 from .captcha_popup_content import CaptchaPopupContent
+from .captcha_enums import CaptchaDifficulty
 from .constants import *
 
 
@@ -18,7 +19,7 @@ class Captcha(QPushButton):
         super(Captcha, self).__init__(parent)
 
         self.__captcha_popup = None
-        self.__text = ''
+        self.__text = 'I\'m not a robot'
         self.__passed = False
         self.resize(CAPTCHA_BUTTON_SIZE)
         super().setText('')
@@ -32,6 +33,7 @@ class Captcha(QPushButton):
         self.__checkbox_width = 2
         self.__checkmark_color = CAPTCHA_BUTTON_CHECKMARK_COLOR
 
+        self.__captcha_difficulty = CaptchaDifficulty.MEDIUM
         self.__captcha_border_radius = 10
         self.__captcha_foreground_color = CAPTCHA_POPUP_FOREGROUND_COLOR
         self.__captcha_background_color = CAPTCHA_POPUP_BACKGROUND_COLOR
@@ -60,6 +62,7 @@ class Captcha(QPushButton):
             return
 
         self.__captcha_popup_content = CaptchaPopupContent(
+            self.__captcha_difficulty,
             self.__captcha_border_radius,
             self.__captcha_foreground_color,
             self.__captcha_background_color,
@@ -73,8 +76,9 @@ class Captcha(QPushButton):
         actual_height = self.height() - self.__button_border_width * 2
         dimension = int(actual_height * 0.66)
         buffer = self.__button_border_width + math.ceil((actual_height - dimension) / 2)
-        x_position = self.parent().mapToGlobal(self.pos()).x() + dimension + buffer * 2
-        y_position = self.parent().mapToGlobal(self.pos()).y() + self.height() // 2
+        top = self.parent() if self.parent() is not None else self
+        x_position = top.mapToGlobal(self.pos()).x() + dimension + buffer * 2
+        y_position = top.mapToGlobal(self.pos()).y() + self.height() // 2
 
         self.__captcha_popup = CaptchaPopup(self.__captcha_popup_content, QPoint(x_position, y_position))
         self.__captcha_popup.show()
@@ -282,9 +286,21 @@ class Captcha(QPushButton):
     def setCaptchaSecondaryColorHovered(self, color: QColor) -> None:
         self.__captcha_secondary_color_hover = color
 
+    def getDifficulty(self) -> CaptchaDifficulty:
+        return self.__captcha_difficulty
+
+    def setDifficulty(self, difficulty: CaptchaDifficulty) -> None:
+        self.__captcha_difficulty = difficulty
+
     def isPassed(self) -> bool:
         return self.__passed
+
+    def setPassed(self, passed: bool) -> None:
+        self.__passed = passed
 
     def reset(self) -> None:
         self.__passed = False
         self.update()
+
+    def getPopup(self) -> CaptchaPopup:
+        return self.__captcha_popup

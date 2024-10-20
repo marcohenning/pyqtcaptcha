@@ -29,3 +29,15 @@ class CaptchaPopup(QWidget):
 
     def resizeEvent(self, event) -> None:
         self.__update_position()
+
+    def getContent(self) -> CaptchaPopupContent:
+        return self.__captcha_popup_content
+
+    def setContent(self, content: CaptchaPopupContent) -> None:
+        self.__captcha_popup_content = content
+
+    def getPosition(self) -> QPoint:
+        return self.__position
+
+    def setPosition(self, position: QPoint) -> None:
+        self.__position = position

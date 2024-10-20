@@ -81,3 +81,6 @@ class CaptchaIconButton(QPushButton):
 
     def setHoveredColor(self, color: QColor) -> None:
         self.__color_hover = color
+
+    def isHovered(self) -> bool:
+        return self.__hover
