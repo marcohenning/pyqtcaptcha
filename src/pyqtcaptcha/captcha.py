@@ -131,7 +131,7 @@ class Captcha(QPushButton):
         super().paintEvent(event)
 
         painter = QPainter(self)
-        painter.setPen(QPen(self.__checkbox_color, self.__checkbox_width,
+        painter.setPen(QPen(self.__button_foreground_color, self.__checkbox_width,
                             Qt.PenStyle.SolidLine, Qt.PenCapStyle.SquareCap))
         painter.setFont(self.font())
 
@@ -152,6 +152,8 @@ class Captcha(QPushButton):
 
         # Draw checkbox
         if not self.__passed:
+            painter.setPen(QPen(self.__checkbox_color, self.__checkbox_width,
+                                Qt.PenStyle.SolidLine, Qt.PenCapStyle.SquareCap))
             painter.drawRoundedRect(buffer, buffer, dimension, dimension,
                                     int(dimension * 0.2), int(dimension * 0.2))
         # Draw checkmark
