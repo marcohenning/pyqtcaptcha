@@ -4,7 +4,7 @@ from qtpy.QtGui import QPainter, QPen, QFontMetrics
 from qtpy.QtWidgets import QWidget, QPushButton
 from .captcha_popup import CaptchaPopup
 from .captcha_popup_content import CaptchaPopupContent
-from .captcha_enums import CaptchaDifficulty
+from .captcha_enums import *
 from .constants import *
 
 
