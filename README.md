@@ -8,7 +8,7 @@
 
 A modern and fully customizable CAPTCHA library for PyQt and PySide.
 
-GIF...
+![main](https://github.com/user-attachments/assets/14af04a6-c953-4038-8121-0c7c91b92f9f)
 
 ## About
 
@@ -215,7 +215,7 @@ captcha.failed.connect(self.some_function)
 
 ## Showcase
 
-Video...
+https://github.com/user-attachments/assets/4a9245ea-3cee-40fd-9457-123a4dc0c58a
 
 ## License
 
