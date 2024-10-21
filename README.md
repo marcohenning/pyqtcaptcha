@@ -14,7 +14,7 @@ GIF...
 
 This library was made to bring CAPTCHA support to PyQt desktop applications. While the measure is mostly used in web applications due to their ease of automation, desktop applications can also be automated using programs like AutoHotkey. This CAPTCHA widget is fully customizable from everything related to visuals to the difficulty of the tasks and helps protect your application from spam and abuse through automation.
 
-> **IMPORTANT:** <br>All images have been sourced from public domain video material and are not subject to copyright restrictions.
+> All images have been sourced from public domain video material and are not subject to copyright restrictions.
 
 ## Installation
 
@@ -66,17 +66,17 @@ captcha.setText('Text')
 
 * **Setting the button foreground color:**
 ```python
-captcha.setButtonForegroundColor(QColor('#FFF'))
+captcha.setButtonForegroundColor(QColor(255, 0, 0))
 ```
 
 * **Setting the button background color:**
 ```python
-captcha.setButtonBackgroundColor(QColor('#FFF'))
+captcha.setButtonBackgroundColor(QColor(0, 255, 0))
 ```
 
 * **Setting the button border color:**
 ```python
-captcha.setButtonBorderColor(QColor('#FFF'))
+captcha.setButtonBorderColor(QColor(0, 0, 255))
 ```
 
 * **Setting the button border width:**
@@ -91,7 +91,7 @@ captcha.setButtonBorderRadius(5)
 
 * **Setting the checkbox color:**
 ```python
-captcha.setCheckboxColor(QColor('#FFF'))
+captcha.setCheckboxColor(QColor(255, 255, 0))
 ```
 
 * **Setting the checkbox width:**
@@ -103,26 +103,26 @@ captcha.setCheckboxWidth(2)
 
 * **Setting the checkmark color:**
 ```python
-captcha.setCheckmarkColor(QColor('#FFF'))
+captcha.setCheckmarkColor(QColor(0, 255, 255))
 ```
 
 * **Setting the CAPTCHA popup foreground color:**
 ```python
-captcha.setCaptchaForegroundColor(QColor('#FFF'))
+captcha.setCaptchaForegroundColor(QColor(255, 255, 255))
 ```
 
 > The foreground color (white by default) is used for text elements like the captcha prompt and submit button text as well as for the checkmark on selected images.
 
 * **Setting the CAPTCHA popup background color:**
 ```python
-captcha.setCaptchaBackgroundColor(QColor('#FFF'))
+captcha.setCaptchaBackgroundColor(QColor(255, 0, 255))
 ```
 
 > The background color (white by default) is used for the background of the popup window.
 
 * **Setting the CAPTCHA popup border color:**
 ```python
-captcha.setCaptchaBorderColor(QColor('#FFF'))
+captcha.setCaptchaBorderColor(QColor(100, 255, 0))
 ```
 
 * **Setting the CAPTCHA popup border radius:**
@@ -132,28 +132,28 @@ captcha.setCaptchaBorderRadius(10)
 
 * **Setting the CAPTCHA popup primary color:**
 ```python
-captcha.setCaptchaPrimaryColor(QColor('#FFF'))
+captcha.setCaptchaPrimaryColor(QColor(0, 100, 255))
 ```
 
 > The primary color (green by default) is used for the background of the captcha prompt and the background of the submit button.
 
 * **Setting the CAPTCHA popup primary color (hovered):**
 ```python
-captcha.setCaptchaPrimaryColorHovered(QColor('#FFF'))
+captcha.setCaptchaPrimaryColorHovered(QColor(255, 100, 0))
 ```
 
 > The primary hovered color (light-green by default) is used for the hovered background of the submit button.
 
 * **Setting the CAPTCHA popup secondary color:**
 ```python
-captcha.setCaptchaSecondaryColor(QColor('#FFF'))
+captcha.setCaptchaSecondaryColor(QColor(255, 255, 100))
 ```
 
 > The secondary color (gray by default) is used for elements like the refresh button, visual button, audio button and play button.
 
 * **Setting the CAPTCHA popup secondary color (hovered):**
 ```python
-captcha.setCaptchaSecondaryColorHovered(QColor('#FFF'))
+captcha.setCaptchaSecondaryColorHovered(QColor(0, 255, 50))
 ```
 
 > The secondary hovered color (dark-gray by default) is used as the hover color for elements like the refresh button, visual button, audio button and play button.
@@ -166,9 +166,52 @@ captcha.passed.connect(self.some_function)
 captcha.failed.connect(self.some_function)
 ```
 
+> The `started` signal is emitted every time the popup window gets opened, while the `aborted` signal is emitted every time the popup window gets closed without submitting an answer. When the submit button is pressed either the `passed` signal or the `failed` signal is emitted depending on the correctness of the answer.
+
 **<br>All available methods:**
 
-Table...
+| Method                                                 | Description                                     |
+|--------------------------------------------------------|-------------------------------------------------|
+| `text(self)`                                           | Get the current button text                     |
+| `setText(self, text: str)`                             | Set the button text                             |
+| `getButtonForegroundColor(self)`                       | Get the current button foreground color         |
+| `setButtonForegroundColor(self, color: QColor)`        | Set the button foreground color                 |
+| `getButtonBackgroundColor(self)`                       | Get the current button background color         |
+| `setButtonBackgroundColor(self, color: QColor)`        | Set the button background color                 |
+| `getButtonBorderColor(self)`                           | Get the current button border color             |
+| `setButtonBorderColor(self, color: QColor)`            | Set the button border color                     |
+| `getButtonBorderWidth(self)`                           | Get the current button border width             |
+| `setButtonBorderWidth(self, width: int)`               | Set the button border width                     |
+| `getButtonBorderRadius(self)`                          | Get the current button border radius            |
+| `setButtonBorderRadius(self, radius: int)`             | Set the button border radius                    |
+| `getCheckboxColor(self)`                               | Get the current checkbox color                  |
+| `setCheckboxColor(self, color: QColor)`                | Set the checkbox color                          |
+| `getCheckboxWidth(self)`                               | Get the current checkbox width                  |
+| `setCheckboxWidth(self, width: int)`                   | Set the checkbox width                          |
+| `getCheckmarkColor(self)`                              | Get the current checkmark color                 |
+| `setCheckmarkColor(self, color: QColor)`               | Set the checkmark color                         |
+| `getCaptchaForegroundColor(self)`                      | Get the current captcha foreground color        |
+| `setCaptchaForegroundColor(self, color: QColor)`       | Set the captcha foreground color                |
+| `getCaptchaBackgroundColor(self)`                      | Get the current captcha background color        |
+| `setCaptchaBackgroundColor(self, color: QColor)`       | Set the captcha background color                |
+| `getCaptchaBorderColor(self)`                          | Get the current captcha border color            |
+| `setCaptchaBorderColor(self, color: QColor)`           | Set the captcha border color                    |
+| `getCaptchaBorderRadius(self)`                         | Get the current captcha border radius           |
+| `setCaptchaBorderRadius(self, radius: int)`            | Set the captcha border radius                   |
+| `getCaptchaPrimaryColor(self)`                         | Get the current captcha primary color           |
+| `setCaptchaPrimaryColor(self, color: QColor)`          | Set the captcha primary color                   |
+| `getCaptchaPrimaryColorHovered(self)`                  | Get the current captcha primary hovered color   |
+| `setCaptchaPrimaryColorHovered(self, color: QColor)`   | Set the captcha primary hovered color           |
+| `getCaptchaSecondaryColor(self)`                       | Get the current captcha secondary color         |
+| `setCaptchaSecondaryColor(self, color: QColor)`        | Set the captcha secondary color                 |
+| `getCaptchaSecondaryColorHovered(self)`                | Get the current captcha secondary hovered color |
+| `setCaptchaSecondaryColorHovered(self, color: QColor)` | Set the captcha secondary hovered color         |
+| `getDifficulty(self)`                                  | Get the current captcha difficulty              |
+| `setDifficulty(self, difficulty: CaptchaDifficulty)`   | Set the captcha difficulty                      |
+| `isPassed(self)`                                       | Has the captcha been completed?                 |
+| `setPassed(self, passed: bool)`                        | Set the completion status of the captcha        |
+| `reset(self)`                                          | Reset the captcha                               |
+| `getPopup(self)`                                       | Get the current captcha popup                   |
 
 ## Showcase
 
